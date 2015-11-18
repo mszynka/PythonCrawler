@@ -28,7 +28,7 @@ class LinkParser(HTMLParser):
 					self.links = self.links + [newUrl]
 
 
-	def getLinks(self, url):
+	def get_links(self, url):
 		"""
 			Crawler content extraction method
 			:param url: Base url to start crawling from
@@ -53,7 +53,7 @@ class LinkParser(HTMLParser):
 
 
 # TODO: implement crawling methods (leave analytics to analytics module)
-def testCrawler(url, word, maxPages):
+def test_crawler(url, word, maxPages):
 	"""
 		Crawler temporary test function
 		:param:
@@ -72,21 +72,20 @@ def testCrawler(url, word, maxPages):
 		try:
 			print(numberVisited, " Visiting: ", url)
 			parser = LinkParser()
-			data, links = parser.getLinks(url)
+			data, links = parser.get_links(url)
 			if data.find(word) > -1:
 				numberFoundWords += 1
 				pagesToVisit += links
 				print(" **Success!**")
 		except HTTPError as e:
 			print(e.code, e.reason)
+			return e.code
 		except:
 			print(" **Failed!** ", sys.exc_info()[0])
 
 	if numberFoundWords > 0:
 		print("The word \"", word, "\" was found at", url, numberFoundWords, "times")
+		return True
 	else:
 		print("Word never found")
-
-
-# Test crawler execution
-testCrawler("http://getbootstrap.com", "docs", 100)
+		return False
