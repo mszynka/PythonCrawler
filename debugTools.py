@@ -5,13 +5,13 @@ class Debug:
 	DebugLevel = 4
 
 	@staticmethod
-	def Log(message):
+	def log(message):
 		print(message)
 
 	@staticmethod
-	def Log(message, severity):
+	def log(message, severity):
 		if isinstance(severity, Debug.Severity) and severity.value <= Debug.DebugLevel:
-			print(str.join(" ", [severity.__str__, ":::", message]))
+			Debug.log(str.join(" ", [severity.__str__, ":::", message]))
 
 	class Severity(Enum):
 		DebugInfo = 4
@@ -33,6 +33,7 @@ class Debug:
 				raise ValueError("Debug.Severity value does not contain itself!")
 
 #TODO: tests
+#TODO: docs
 #TODO: progressbar
 '''
 PROGRESSBAR SCAFFOLDS
