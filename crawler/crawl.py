@@ -12,6 +12,8 @@ import urllib
 from urllib.request import urlopen
 from urllib3.exceptions import HTTPError
 
+from debugTools import Debug
+
 
 class LinkParser(HTMLParser):
 	def handle_starttag(self, tag, attributes):
@@ -70,22 +72,23 @@ def test_crawler(url, word, maxPages):
 		url = pagesToVisit[0]
 		pagesToVisit = pagesToVisit[1:]
 		try:
-			print(numberVisited, " Visiting: ", url)
+			Debug.Log(str.join(" ", [numberVisited.__str__(), " Visiting: ", url]), Debug.Severity.DebugInfo)
 			parser = LinkParser()
 			data, links = parser.get_links(url)
 			if data.find(word) > -1:
 				numberFoundWords += 1
 				pagesToVisit += links
-				print(" **Success!**")
+				Debug.Log(" **Success!**", Debug.Severity.Info)
 		except HTTPError as e:
-			print(e.code, e.reason)
+			Debug.Log(str.join(" ", [e.code, e.reason]), Debug.Severity.Warning)
 			return e.code
 		except:
-			print(" **Failed!** ", sys.exc_info()[0])
+			Debug.Log(str.join(" ", [" **Failed!** ", sys.exc_info()[0]].__str__), Debug.Severity.Warning)
 
 	if numberFoundWords > 0:
-		print("The word \"", word, "\" was found at", url, numberFoundWords, "times")
+		Debug.Log(str.join(" ", ["The word", word, "was found at", url, numberFoundWords.__str__(), "times"]),
+		Debug.Severity.Info)
 		return True
 	else:
-		print("Word never found")
+		Debug.Log("Word never found", Debug.Severity.Info)
 		return False
