@@ -5,13 +5,11 @@ class Debug:
 	DebugLevel = 4
 
 	@staticmethod
-	def log(message):
-		print(message)
-
-	@staticmethod
-	def log(message, severity):
+	def log(message, severity=None):
 		if isinstance(severity, Debug.Severity) and severity.value <= Debug.DebugLevel:
-			Debug.log(str.join(" ", [severity.__str__, ":::", message]))
+			print(str.join(" ", [severity.__str__, ":::", message]))
+		else:
+			print(message)
 
 	class Severity(Enum):
 		DebugInfo = 4
