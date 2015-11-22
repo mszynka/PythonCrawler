@@ -8,6 +8,10 @@ from debugTools import Debug
 
 
 class LinkParser(HTMLParser):
+	def __init__ (self):
+		super().__init__(convert_charrefs=True)
+		self.links = []
+
 	def error (self, message):
 		Debug.log(message, Debug.Severity.Error)
 

@@ -18,6 +18,9 @@ class Crawler:
 	class CrawlerWorker(Thread):
 		pass
 
+	def crawl(self, base_url):
+		pass
+
 
 # TODO: implement crawling methods (leave analytics to analytics module)
 def test_crawler (url, word, maxPages):
@@ -30,7 +33,7 @@ def test_crawler (url, word, maxPages):
 	pagesToVisit = LinkAnalyzer.tokenize_links(url)  # Crawler page's links array
 	numberVisited = 0  # Number of already visited links
 	numberFoundWords = 0  # Number of found matching words during crawling
-	parser = LinkParser() # Parser initialization
+	parser = LinkParser()  # Parser initialization
 
 	while numberVisited < maxPages and pagesToVisit != []:
 		numberVisited += 1
@@ -50,10 +53,8 @@ def test_crawler (url, word, maxPages):
 			Debug.log(str.join(" ", [" **Failed!** ", str(sys.exc_info()[0])]), Debug.Severity.Warning)
 
 	if numberFoundWords > 0:
-		Debug.log(str.join(" ", ["The word", word, "was found at", url,
-						 numberFoundWords.__str__(),
-								 "times"]),
-				  Debug.Severity.Info)
+		Debug.log(str.join(" ", ["The word", word, "was found at", url, numberFoundWords.__str__(), "times"]),
+		          Debug.Severity.Info)
 		return True
 	else:
 		Debug.log("Word never found", Debug.Severity.Info)

@@ -2,10 +2,15 @@ from enum import Enum
 
 
 class Debug:
-	DebugLevel = 4
+	DebugLevel = 4  # Output debug message severity level
 
 	@staticmethod
-	def log(message, severity=None):
+	def log (message, severity=None):
+		"""
+		Custom logging debugger with severity option
+		:param message: Message info to log
+		:param severity: Severity of the message
+		"""
 		if isinstance(severity, Debug.Severity) and severity.value <= Debug.DebugLevel:
 			print(str.join(" ", [severity.__str__, ":::", message]))
 		else:
@@ -18,7 +23,11 @@ class Debug:
 		Error = 1
 
 		@property
-		def __str__(self):
+		def __str__ (self):
+			"""
+			Stringify property
+			:return: Name string or ValueError if incorrect
+			"""
 			if self.value == 4:
 				return "Debug"
 			elif self.value == 3:
@@ -30,9 +39,8 @@ class Debug:
 			else:
 				raise ValueError("Debug.Severity value does not contain itself!")
 
-#TODO: tests
-#TODO: docs
-#TODO: progressbar
+
+# TODO: progressbar
 '''
 PROGRESSBAR SCAFFOLDS
 import click
