@@ -1,8 +1,10 @@
 from unittest import TestCase
 
-from crawler.Crawler import test_crawler
+from crawler.Crawler import Crawler
 
 
 class TestCrawler(TestCase):
-	def test_test_crawler_has_exited_properly(self):
-		self.assertTrue(test_crawler("http://getbootstrap.com", "docs", 10))
+	# TODO: tests
+	def test_crawler(self):
+		c = Crawler()
+		self.assertEqual(c.crawl("http://getbootstrap.com", 100), True)

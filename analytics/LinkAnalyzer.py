@@ -9,7 +9,7 @@ class LinkAnalyzer:
 		"""
 		Link tokenizer for smart management
 		:param links: Links array or string
-		:return: Parsed links array
+		:return: Parsed links dict
 		"""
 		outputLinks = dict()
 

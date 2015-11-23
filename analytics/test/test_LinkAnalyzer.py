@@ -9,7 +9,7 @@ class TestLinkAnalyzer(TestCase):
 
 	def test_tokenize_links_dictionary_single_value (self):
 		base_url = "http://thewebsite.com"
-		for i in ["/", "/index", "/index.html", "/app/running/test", "/another%link%type"]:
+		for i in ["/", "/index", "/index.html", "/app/", "/app/running/", "/app/running/test", "/another%link%type"]:
 			link = "".join([base_url, i])
 			with self.subTest():
 				self.assertDictEqual(LinkAnalyzer.tokenize_links(link), { base_url.split("//")[1]: [i] })
@@ -18,7 +18,7 @@ class TestLinkAnalyzer(TestCase):
 		base_url = "http://thewebsite.com"
 		links = []
 		list_container = []
-		for i in ["/", "/index", "/index.html", "/app/running/test", "/another%link%type"]:
+		for i in ["/", "/index", "/index.html", "/app/", "/app/running/", "/app/running/test", "/another%link%type"]:
 			links.append("".join([base_url, i]))
 			list_container.append(i)
 			with self.subTest():

@@ -10,6 +10,7 @@ from debugTools import Debug
 class LinkParser(HTMLParser):
 	def __init__ (self):
 		super().__init__(convert_charrefs=True)
+		self.baseUrl = []
 		self.links = []
 
 	def error (self, message):
@@ -17,7 +18,7 @@ class LinkParser(HTMLParser):
 
 	def handle_starttag(self, tag, attributes):
 		"""
-			handle_starttag - overrides HTMLParser handle_starttag searching for links in a[href] HTML tags
+			handle_starttag - overrides HTMLParser's handle_starttag searching for links in a[href] HTML tags
 			:param tag: HTML tag
 			:param attributes: HTML tag attributes
 		"""
@@ -29,7 +30,7 @@ class LinkParser(HTMLParser):
 
 	def get_links(self, url):
 		"""
-			Crawler content extraction method
+			LinkParser content extraction method
 			:param url: Base url to start crawling from
 			:return htmlString: current page contents as HTML String
 			:return links[]: extracted list of links from HTML content
@@ -45,7 +46,6 @@ class LinkParser(HTMLParser):
 			htmlBytes = response.read()
 			htmlString = htmlBytes.decode("utf-8")
 			self.feed(htmlString)
-			self.links = LinkAnalyzer.tokenize_links(self.links)
-			return htmlString, self.links
+			return htmlString, LinkAnalyzer.tokenize_links(self.links)
 		else:
 			return "", []
