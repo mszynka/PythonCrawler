@@ -3,7 +3,7 @@ from html.parser import HTMLParser
 from urllib import parse
 from urllib.request import urlopen
 
-from analytics.LinkAnalyzer import LinkAnalyzer
+from crawler.Links.LinkContainer import tokenize_links
 from debugTools import Debug
 
 
@@ -46,6 +46,6 @@ class LinkParser(HTMLParser):
 			htmlBytes = response.read()
 			htmlString = htmlBytes.decode("utf-8")
 			self.feed(htmlString)
-			return htmlString, LinkAnalyzer.tokenize_links(self.links)
+			return htmlString, tokenize_links(self.links)
 		else:
 			return "", []

@@ -9,7 +9,7 @@ import sys
 import urllib
 from threading import Thread
 
-from analytics.LinkAnalyzer import LinkAnalyzer
+from crawler.Links.LinkContainer import tokenize_links
 from crawler.Links.LinkParser import LinkParser
 from debugTools import Debug
 
@@ -27,7 +27,7 @@ class Crawler(Thread):
 				:param url: base url to start crawling with
 				:return: boolean upon success/failure
 			"""
-		self._pagesToVisit = LinkAnalyzer.tokenize_links(url)  # Crawler page's links array
+		self._pagesToVisit = tokenize_links(url)  # Crawler page's links array
 
 		print(self._pagesToVisit)
 		url = "http://" + str(list(self._pagesToVisit.keys())[0])
