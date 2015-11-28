@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 
+from crawler.Links.LinkContainerException import LinkContainerException
 from debugTools import Debug
 
 
@@ -10,6 +11,8 @@ class LinkContainer:
 		:param dictionary: Dict element as init param
 		"""
 		self.dict = dictionary
+		self.linksCrawledOverCounter = 0
+		self.linksToCrawlCounter = 0
 
 	def __add__ (self, element):
 		"""
@@ -17,20 +20,29 @@ class LinkContainer:
 		:param element: Element to insert
 		:raises LinkContainerException
 		"""
-		pass
+		if not isinstance(element, dict) or not isinstance(element, []) or not isinstance(element, str):
+			raise LinkContainerException(
+				"LinkContainer.add's param element is not valid instance of a dictionary, an array or string", element)
+
+		# TODO: implement
+		raise NotImplementedError()
 
 	def __bool__ (self):
 		"""
 		True if all links are already crawled over
 		:return boolean
+		:raises LinkContainerException
 		"""
-		pass
+		return self.linksCrawledOverCounter == self.linksToCrawlCounter
 
 	def __getitem__ (self):
 		"""
 		Returns last item that hadn't been crawled over
 		:return string
+		:raises LinkContainerException
 		"""
+		# TODO: increment/decrement suitable properties
+		# TODO: change returned element flag
 		pass
 
 	def __contains__ (self, item):
@@ -38,7 +50,9 @@ class LinkContainer:
 		# Boolean upon item existence
 		:param item: Item name as dict key
 		:return boolean
+		:raises LinkContainerException
 		"""
+		# TODO: Attention! Is synchronous. May consume time!
 		pass
 
 	def __delitem__ (self, key):
@@ -47,13 +61,16 @@ class LinkContainer:
 		:param key: Dict key
 		:raises LinkContainerException
 		"""
+		# TODO: Attention! Is synchronous. May consume time!
 		pass
 
 	def __str__ (self):
 		"""
 		Returns elements
 		:return string
+		:raises LinkContainerException
 		"""
+		# TODO: Attention! Is synchronous. May consume time!
 		pass
 
 	def __setitem__ (self, key, value):
@@ -64,6 +81,45 @@ class LinkContainer:
 		:raises LinkContainerException
 		"""
 		pass
+
+	def add (self, element):
+		""" [Public method]
+		Insert's element into container
+		:param element: Element to insert
+		:raises LinkContainerException
+		"""
+		try:
+			self.__add__(element)
+		except LinkContainerException as e:
+			print(e)
+		except Exception as e:
+			raise LinkContainerException(None, self, e)
+
+	def get_next_item (self):
+		""" [Public method]
+		Returns next item to crawl over
+		:raises LinkContainerException
+		"""
+		try:
+			self.__getitem__()
+		except LinkContainerException as e:
+			print(e)
+		except Exception as e:
+			raise LinkContainerException(None, self, e)
+
+	@property
+	def has_next_item (self):
+		""" [Public property]
+		Returns true if there are items to crawl over
+		:return: boolean
+		:raises LinkContainerException
+		"""
+		try:
+			return not self.__bool__()
+		except LinkContainerException as e:
+			print(e)
+		except Exception as e:
+			raise LinkContainerException(None, self, e)
 
 
 def tokenize_links (links):
