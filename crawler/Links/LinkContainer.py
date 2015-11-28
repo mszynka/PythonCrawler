@@ -128,6 +128,7 @@ def tokenize_links (links):
 	:param links: Links array or string
 	:return: Parsed links dict
 	"""
+	# TODO: remove this function
 	outputLinksDict = dict()
 
 	if isinstance(links, list):
