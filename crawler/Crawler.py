@@ -8,7 +8,6 @@
 import sys
 import urllib
 from threading import Thread
-
 from crawler.Links.LinkContainer import tokenize_links
 from crawler.Links.LinkParser import LinkParser
 from debugTools import Debug
@@ -33,6 +32,7 @@ class Crawler(Thread):
 		url = "http://" + str(list(self._pagesToVisit.keys())[0])
 		self._pagesVisited.append(url)
 		# self._pagesToVisit = self._pagesToVisit[1:]
+		# noinspection PyBroadException
 		try:
 			Debug.log(str.join(" ", [len(self._pagesVisited), " Visiting: ", url]), Debug.Severity.DebugInfo)
 			data, links = self._parser.get_links(url)
