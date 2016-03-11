@@ -1,35 +1,13 @@
 from timeit import default_timer as timer
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from Database.database_manager import DatabaseManager
+from Thread.thread_manager import ThreadManager
 
-import model
-from thread import ParserThread
-
-engine = create_engine('sqlite:///parsed.db')
-model.Base.metadata.create_all(engine)
-session = sessionmaker(bind=engine)()
-
-threads = []
-maxThreadsNumber = 7
-
-for i in range(1, maxThreadsNumber + 1):
-	threads.append(ParserThread(i, maxThreadsNumber + 1))
-
+tmanager = ThreadManager(7)
 start = timer()
-for thread in threads:
-	thread.start()
-
-parsed_data = []
-
-for thread in threads:
-	thread.join()
-	parsed_data.extend(thread.parsed_data_array)
-
+tmanager.process_on_all_workers()
 end = timer()
 print("Elapsed time: ", end - start)
 
-for data in parsed_data:
-	session.add(data)
-
-session.commit()
+dbmanager = DatabaseManager()
+dbmanager.add_many(tmanager.threads_data)

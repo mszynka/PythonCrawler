@@ -1,12 +1,12 @@
+import time
 import urllib
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
-import time
 from bs4 import BeautifulSoup
 from pyquery import PyQuery
 
-import model
+from Database import model
 
 
 def parser (list_of_urls, pid, array_len):
