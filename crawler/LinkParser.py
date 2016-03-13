@@ -3,8 +3,7 @@ from html.parser import HTMLParser
 from urllib import parse
 from urllib.request import urlopen
 
-from crawler.Links.LinkContainer import tokenize_links
-from debugTools import Debug
+from crawler.Crawler import tokenize_links
 
 
 class LinkParser(HTMLParser):
@@ -14,7 +13,9 @@ class LinkParser(HTMLParser):
 		self.links = []
 
 	def error (self, message):
-		Debug.log(message, Debug.Severity.Error)
+		pass
+
+	# 	Debug.log(message, Debug.Severity.Error)
 
 	def handle_starttag(self, tag, attributes):
 		"""
@@ -44,7 +45,7 @@ class LinkParser(HTMLParser):
 
 		if response.info().get('Content-Type').find('text/html') > -1:
 			htmlBytes = response.read()
-			htmlString = htmlBytes.decode("utf-8")
+			htmlString = htmlBytes.decode("utf-8")  # Detect encoding
 			self.feed(htmlString)
 			return htmlString, tokenize_links(self.links)
 		else:
