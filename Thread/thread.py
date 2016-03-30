@@ -7,22 +7,20 @@ from Parse.parser import parser
 
 
 class ThreadParser(threading.Thread):
-	def __init__ (self, thread_id, manager):
+	def __init__ (self, manager):
 		"""
 		Default constructor
-		:param thread_id: If multithreading sets Thread ID for logging and identibility purposes
 		:param manager: To access parent thread
 		"""
 		threading.Thread.__init__(self)
 		self.manager = manager
-		self.thread_id = thread_id
-		logging.debug("Thread %3d initialized. Assuming %3d max threads", thread_id, self.manager.max_workers)
+		logging.debug("Thread %3d initialized. Assuming %3d max threads", self.manager.max_workers)
 
 	def run (self):
 		"""
 		Default overriden thread run method
 		"""
-		logging.debug("Thread %3d running", self.thread_id)
+		logging.debug("Thread running")
 		exit_flag = False
 
 		while not exit_flag:
@@ -40,19 +38,20 @@ class ThreadParser(threading.Thread):
 				self.manager.qlock.release()
 				exit_flag = True
 
-		logging.debug("Thread %3d finished", self.thread_id)
+		logging.debug("Thread finished")
 
-	def parse_and_log_time (self, url):
+	@staticmethod
+	def parse_and_log_time (url):
 		"""
 		Runs parser, logger and timer for logging and statistics
 		:param url: URL as entry point for parser
 		:returns: Parsed data from parser
 		"""
-		logging.debug("Thread %3d acquired some data and starts processing", self.thread_id)
+		logging.debug("Thread acquired some data and starts processing")
 		start = timer()
-		parsed_data = parser(url, self.thread_id)
+		parsed_data = parser(url)
 		end = timer()
-		logging.debug("Thread %3d finished processing. Elapsed: %.2f s", self.thread_id, end - start)
+		logging.debug("Thread finished processing. Elapsed: %.2f s", end - start)
 		return parsed_data
 
 	def return_data_to_manager (self, parsed_data):

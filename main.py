@@ -1,3 +1,8 @@
+"""
+----------------------
+	 Main module
+----------------------
+"""
 import logging
 from timeit import default_timer as timer
 
@@ -16,12 +21,13 @@ class Main:
 		self.max_threads = max_threads
 		self.tmanager = ThreadManager(max_threads)
 
-	def configure_logger (self):
+	def configure_file_logger (self):
 		"""
 		Configures logger and initiates logging by inserting info message
 		"""
 		logging.basicConfig(filename="parser.log", level=logging.DEBUG, filemode='w',
-		                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s', datefmt='%m-%d %H:%M')
+		                    format='%(asctime)s %(thread)d:%(module)-15s %(name)-12s %(levelname)-8s %(message)s',
+		                    datefmt='%m-%d %H:%M')
 		logging.info("Started with max threads: %d", self.max_threads)
 
 	@staticmethod
@@ -45,7 +51,7 @@ class Main:
 		logging.info("Thread manager finished working. Elapsed time: %.2f", end - start)
 
 	def run (self):
-		self.configure_logger()
+		self.configure_file_logger()
 		self.configure_console_logger()
 		self.compute_with_tmanager()
 		self.dbmanager.add_queue(self.tmanager.out_queue)

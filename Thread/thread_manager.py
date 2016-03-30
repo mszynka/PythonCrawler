@@ -27,15 +27,15 @@ class ThreadManager:
 		for item in input.links_list:
 			self.queue.put(item)
 		# TODO: create self.logger with format interceptor with class name or throw it into global interceptor
-		logging.debug("ThreadManager: initialized with %d elements in queue", len(input.links_list))
+		logging.debug("Initialized with %d elements in queue", len(input.links_list))
 
 	def create_threads (self):
 		"""
 		Creates workers
 		"""
 		for i in range(0, self.max_workers):
-			self._threads.append(ThreadParser(i, self))
-		logging.debug("ThreadManager: created %d threads", len(self._threads))
+			self._threads.append(ThreadParser(self))
+		logging.debug("Created %d threads", len(self._threads))
 
 	def start_threads (self):
 		"""
@@ -43,7 +43,7 @@ class ThreadManager:
 		"""
 		for thread in self._threads:
 			thread.start()
-		logging.debug("ThreadManager: started all %d threads", len(self._threads))
+		logging.debug("Started all %d threads", len(self._threads))
 
 	def join_all (self):
 		"""
@@ -52,7 +52,7 @@ class ThreadManager:
 		# TODO: use await for better thread utilization
 		for thread in self._threads:
 			thread.join()
-		logging.debug("ThreadManager: joined all %d threads", len(self._threads))
+		logging.debug("Joined all %d threads", len(self._threads))
 
 	def process_on_all_workers (self, start=None):
 		"""
@@ -61,7 +61,7 @@ class ThreadManager:
 		"""
 		# noinspection PyAttributeOutsideInit
 		self.start_time = start
-		logging.debug("ThreadManager: started processing on all workers with %d elements in queue", self.queue.qsize())
+		logging.debug("Started processing on all workers with %d elements in queue", self.queue.qsize())
 		self.create_threads()
 		self.start_threads()
 		self.join_all()
