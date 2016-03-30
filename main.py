@@ -7,6 +7,7 @@ import logging
 from timeit import default_timer as timer
 
 from Database.database_manager import DatabaseManager
+from Log.logger_manager import LoggerManager
 from Thread.thread_manager import ThreadManager
 
 
@@ -20,26 +21,7 @@ class Main:
 		self.dbmanager = DatabaseManager()
 		self.max_threads = max_threads
 		self.tmanager = ThreadManager(max_threads)
-
-	def configure_file_logger (self):
-		"""
-		Configures logger and initiates logging by inserting info message
-		"""
-		logging.basicConfig(filename="parser.log", level=logging.DEBUG, filemode='w',
-		                    format='%(asctime)s %(thread)d:%(module)-15s %(name)-12s %(levelname)-8s %(message)s',
-		                    datefmt='%m-%d %H:%M')
-		logging.info("Started with max threads: %d", self.max_threads)
-
-	@staticmethod
-	def configure_console_logger ():
-		"""
-		Defines custom console logger for development and info for user
-		"""
-		console = logging.StreamHandler()
-		console.setLevel(logging.WARNING)  # Change level for console logger in development mode
-		formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
-		console.setFormatter(formatter)
-		logging.getLogger('').addHandler(console)
+		self.logmanager = LoggerManager(max_threads)
 
 	def compute_with_tmanager (self):
 		"""
@@ -51,8 +33,7 @@ class Main:
 		logging.info("Thread manager finished working. Elapsed time: %.2f", end - start)
 
 	def run (self):
-		self.configure_file_logger()
-		self.configure_console_logger()
+		self.logmanager.config_loggers()
 		self.compute_with_tmanager()
 		self.dbmanager.add_queue(self.tmanager.out_queue)
 
