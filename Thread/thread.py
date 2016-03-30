@@ -14,20 +14,21 @@ class ThreadParser(threading.Thread):
 		"""
 		threading.Thread.__init__(self)
 		self.manager = manager
-		logging.debug("Thread %3d initialized. Assuming %3d max threads", self.manager.max_workers)
+		self.logger = logging.getLogger(type(self).__name__)
+		self.logger.debug("Thread initialized. Assuming %3d max threads", self.manager.max_workers)
 
 	def run (self):
 		"""
 		Default overriden thread run method
 		"""
-		logging.debug("Thread running")
+		self.logger.debug("Thread running")
 		exit_flag = False
 
 		while not exit_flag:
 			# Lock
 			self.manager.qlock.acquire()  # TODO: use await for better thread utilization
 			if not self.manager.queue.empty():
-				url = self.manager.queue.get()
+				url = self.manager.queue.get()  # TODO: get n{1-5, or benchmarks} urls (for await statement)
 				self.manager.qlock.release()
 				# Parse
 				parsed_data = self.parse_and_log_time(url)
@@ -38,20 +39,19 @@ class ThreadParser(threading.Thread):
 				self.manager.qlock.release()
 				exit_flag = True
 
-		logging.debug("Thread finished")
+		self.logger.debug("Thread finished")
 
-	@staticmethod
-	def parse_and_log_time (url):
+	def parse_and_log_time (self, url):
 		"""
-		Runs parser, logger and timer for logging and statistics
+		Runs parser, logger and timer for self.logger.and statistics
 		:param url: URL as entry point for parser
 		:returns: Parsed data from parser
 		"""
-		logging.debug("Thread acquired some data and starts processing")
+		self.logger.debug("Thread acquired some data and starts processing")
 		start = timer()
 		parsed_data = parser(url)
 		end = timer()
-		logging.debug("Thread finished processing. Elapsed: %.2f s", end - start)
+		self.logger.debug("Thread finished processing. Elapsed: %.2f s", end - start)
 		return parsed_data
 
 	def return_data_to_manager (self, parsed_data):

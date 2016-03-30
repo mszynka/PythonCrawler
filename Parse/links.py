@@ -10,6 +10,8 @@ from urllib import parse
 from urllib.parse import urlparse
 from urllib.request import urlopen
 
+logger = logging.getLogger("LinksParser")
+
 
 def tokenize_links (links):
 	"""
@@ -21,7 +23,7 @@ def tokenize_links (links):
 	output_links_dict = dict()
 
 	if isinstance(links, list):
-		logging.info("LinkAnalyzer found list of links")
+		logger.info("LinkAnalyzer found list of links")
 		for link in links:
 			tmp_url = urlparse(link)
 			if tmp_url.path != '':
@@ -33,7 +35,7 @@ def tokenize_links (links):
 				output_links_dict[tmp_url.netloc] = [{ "/": False }]
 		return output_links_dict
 	elif isinstance(links, str):
-		logging.info("LinkAnalyzer found single link")
+		logger.info("LinkAnalyzer found single link")
 		tmp_url = urlparse(links)
 		if tmp_url.path != '':
 			output_links_dict[tmp_url.netloc] = [{ tmp_url.path: False }]

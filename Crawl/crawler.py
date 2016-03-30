@@ -20,6 +20,7 @@ class Crawler(Thread):
 		self._parser = LinkParser()  # Parser initialization
 		self._pagesVisited = list()  # List of already visited links
 		self._pagesToVisit = dict()  # Dict of pages to crawl
+		self.logger = logging.getLogger(type(self).__name__)
 
 	def crawl (self, url):
 		"""
@@ -30,26 +31,25 @@ class Crawler(Thread):
 		self._pagesToVisit = tokenize_links(url)  # Crawler page's links array
 
 		url = "http://" + str(list(self._pagesToVisit.keys())[0])
-		logging.info("Crawling: " + url)
+		self.logger.info("Crawling: " + url)
 		self._pagesVisited.append(url)
 		# self._pagesToVisit = self._pagesToVisit[1:]
 		# noinspection PyBroadException
 		try:
-			logging.debug(str.join(" ", [len(self._pagesVisited), " Visiting: ", url]))
+			self.logger.debug(str.join(" ", [len(self._pagesVisited), " Visiting: ", url]))
 			data, links = self._parser.get_links(url)
 			self._pagesToVisit += links
 		except urllib.error.HTTPError as e:
-			logging.debug(str.join(" ", [str(e.code), str(e.reason)]))
+			self.logger.debug(str.join(" ", [str(e.code), str(e.reason)]))
 			return e.code
 		except:
-			logging.error(sys.exc_info())
+			self.logger.error(sys.exc_info())
 			return False
 
-		logging.info(str.join(" ", ["Visited", str(len(self._pagesVisited)), "pages"]))
+		self.logger.info(str.join(" ", ["Visited", str(len(self._pagesVisited)), "pages"]))
 		return True
 
-	@staticmethod
-	def execute_request (url):
+	def execute_request (self, url):
 		"""
 		Executes a request on given URL
 		:param url: URL to get the response
@@ -58,11 +58,11 @@ class Crawler(Thread):
 		try:
 			request = urllib.request.Request(url, headers={ 'User-Agent': 'Wget/1.9.1' })  # User-Agent hack for getting
 			response = urlopen(request)
-			logging.debug("Received response %.10s", response)
+			self.logger.debug("Received response %.10s", response)
 		except HTTPError as err:
-			logging.error("HTTPError %s", err)
+			self.logger.error("HTTPError %s", err)
 			time.sleep(3)
 			request = urllib.request.Request(url, headers={ 'User-Agent': 'Wget/1.9.1' })  # User-Agent hack for getting
 			response = urlopen(request)
-			logging.debug("Received response %.10s", response)
+			self.logger.debug("Received response %.10s", response)
 		return response

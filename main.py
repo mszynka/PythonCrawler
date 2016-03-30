@@ -21,7 +21,8 @@ class Main:
 		self.dbmanager = DatabaseManager()
 		self.max_threads = max_threads
 		self.tmanager = ThreadManager(max_threads)
-		self.logmanager = LoggerManager(max_threads)
+		self.logmanager = LoggerManager()
+		self.logger = logging.getLogger(type(self).__name__)
 
 	def compute_with_tmanager (self):
 		"""
@@ -30,11 +31,12 @@ class Main:
 		start = timer()
 		self.tmanager.process_on_all_workers(start)
 		end = timer()
-		logging.info("Thread manager finished working. Elapsed time: %.2f", end - start)
+		self.logger.info("Thread manager finished working. Elapsed time: %.2f", end - start)
 
 	def run (self):
 		self.logmanager.config_loggers()
+		self.logger.info("Started with max threads: %d", self.max_threads)
 		self.compute_with_tmanager()
 		self.dbmanager.add_queue(self.tmanager.out_queue)
 
-		logging.info("Finished parsing")
+		self.logger.info("Finished parsing")
