@@ -11,7 +11,7 @@ from threading import Thread
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
-from Parse.links import LinkParser, tokenize_links
+from Parse.links import LinkParser
 
 
 class Crawler(Thread):
@@ -28,7 +28,7 @@ class Crawler(Thread):
 				:param url: base url to start crawling with
 				:return: boolean upon success/failure
 			"""
-		self._pagesToVisit = tokenize_links(url)  # Crawler page's links array
+		self._pagesToVisit = self._parser.tokenize_links(url)  # Crawler page's links array
 
 		url = "http://" + str(list(self._pagesToVisit.keys())[0])
 		self.logger.info("Crawling: " + url)

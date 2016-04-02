@@ -3,7 +3,8 @@ import sys
 import threading
 from timeit import default_timer as timer
 
-from Parse.parser import parser
+from Crawl.crawler import Crawler
+from Parse.parser import Parser
 
 
 class ThreadParser(threading.Thread):
@@ -16,6 +17,7 @@ class ThreadParser(threading.Thread):
 		self.manager = manager
 		self.logger = logging.getLogger(type(self).__name__)
 		self.logger.debug("Thread initialized. Assuming %3d max threads", self.manager.max_workers)
+		self.parser = Parser()
 
 	def run (self):
 		"""
@@ -30,9 +32,11 @@ class ThreadParser(threading.Thread):
 			if not self.manager.queue.empty():
 				url = self.manager.queue.get()  # TODO: get n{1-5, or benchmarks} urls (for await statement)
 				self.manager.qlock.release()
+
 				# Parse
 				parsed_data = self.parse_and_log_time(url)
 				self.update_progressbar()
+
 				# Return
 				self.return_data_to_manager(parsed_data)
 			else:  # Exiting thread if queue is empty
@@ -48,9 +52,15 @@ class ThreadParser(threading.Thread):
 		:returns: Parsed data from parser
 		"""
 		self.logger.debug("Thread acquired some data and starts processing")
+
 		start = timer()
-		parsed_data = parser(url)
+		response = Crawler().execute_request(url)
+		if response:
+			parsed_data = self.parser.parse(response, url)
+		else:
+			parsed_data = None
 		end = timer()
+
 		self.logger.debug("Thread finished processing. Elapsed: %.2f s", end - start)
 		return parsed_data
 
@@ -71,9 +81,14 @@ class ThreadParser(threading.Thread):
 			count_progress = int((1 - (self.manager.queue.qsize() / self.manager.input_size)) * 100)
 		else:
 			count_progress = 100
+		progress_bar = ""
+		for i in range(0, 20):
+			if i < int(count_progress / 5):
+				progress_bar += "|"
+			else:
+				progress_bar += " "
 		sys.stdout.write("\r")
-		# TODO: redo formating this section
 		sys.stdout.write(
-			"Progress: " + str(count_progress) + "% Time elapsed: " + format(timer() - self.manager.start_time,
-			                                                                 ".2f") + "s")
+			progress_bar + " " + str(count_progress) + "% Time elapsed: " + format(timer() - self.manager.start_time,
+			                                                                       ".2f") + "s")
 		sys.stdout.flush()

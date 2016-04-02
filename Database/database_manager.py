@@ -1,4 +1,5 @@
 import logging
+from queue import Queue
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -50,6 +51,7 @@ class DatabaseManager:
 		Adds many from queue
 		:param queue: Model type data queue
 		"""
+		assert isinstance(queue, Queue)
 		while not queue.empty():
 			element = queue.get()
 			# Checking if element is not none to ensure that there is provided data
