@@ -3,56 +3,65 @@ import sys
 import threading
 from timeit import default_timer as timer
 
-from Parse.parser import parser
+from Crawl.crawler import Crawler
+from Parse.parser import Parser
 
 
 class ThreadParser(threading.Thread):
-	def __init__ (self, thread_id, manager):
+	def __init__ (self, manager):
 		"""
 		Default constructor
-		:param thread_id: If multithreading sets Thread ID for logging and identibility purposes
 		:param manager: To access parent thread
 		"""
 		threading.Thread.__init__(self)
 		self.manager = manager
-		self.thread_id = thread_id
-		logging.debug("Thread %3d initialized. Assuming %3d max threads", thread_id, self.manager.max_workers)
+		self.logger = logging.getLogger(type(self).__name__)
+		self.logger.debug("Thread initialized. Assuming %3d max threads", self.manager.max_workers)
+		self.parser = Parser()
 
 	def run (self):
 		"""
 		Default overriden thread run method
 		"""
-		logging.debug("Thread %3d running", self.thread_id)
+		self.logger.debug("Thread running")
 		exit_flag = False
 
 		while not exit_flag:
 			# Lock
 			self.manager.qlock.acquire()  # TODO: use await for better thread utilization
 			if not self.manager.queue.empty():
-				url = self.manager.queue.get()
+				url = self.manager.queue.get()  # TODO: get n{1-5, or benchmarks} urls (for await statement)
 				self.manager.qlock.release()
+
 				# Parse
 				parsed_data = self.parse_and_log_time(url)
 				self.update_progressbar()
+
 				# Return
 				self.return_data_to_manager(parsed_data)
 			else:  # Exiting thread if queue is empty
 				self.manager.qlock.release()
 				exit_flag = True
 
-		logging.debug("Thread %3d finished", self.thread_id)
+		self.logger.debug("Thread finished")
 
 	def parse_and_log_time (self, url):
 		"""
-		Runs parser, logger and timer for logging and statistics
+		Runs parser, logger and timer for self.logger.and statistics
 		:param url: URL as entry point for parser
 		:returns: Parsed data from parser
 		"""
-		logging.debug("Thread %3d acquired some data and starts processing", self.thread_id)
+		self.logger.debug("Thread acquired some data and starts processing")
+
 		start = timer()
-		parsed_data = parser(url, self.thread_id)
+		response = Crawler().execute_request(url)
+		if response:
+			parsed_data = self.parser.parse(response, url)
+		else:
+			parsed_data = None
 		end = timer()
-		logging.debug("Thread %3d finished processing. Elapsed: %.2f s", self.thread_id, end - start)
+
+		self.logger.debug("Thread finished processing. Elapsed: %.2f s", end - start)
 		return parsed_data
 
 	def return_data_to_manager (self, parsed_data):
@@ -72,9 +81,14 @@ class ThreadParser(threading.Thread):
 			count_progress = int((1 - (self.manager.queue.qsize() / self.manager.input_size)) * 100)
 		else:
 			count_progress = 100
+		progress_bar = ""
+		for i in range(0, 20):
+			if i < int(count_progress / 5):
+				progress_bar += "|"
+			else:
+				progress_bar += " "
 		sys.stdout.write("\r")
-		# TODO: redo formating this section
 		sys.stdout.write(
-			"Progress: " + str(count_progress) + "% Time elapsed: " + format(timer() - self.manager.start_time,
-			                                                                 ".2f") + "s")
+			progress_bar + " " + str(count_progress) + "% Time elapsed: " + format(timer() - self.manager.start_time,
+			                                                                       ".2f") + "s")
 		sys.stdout.flush()

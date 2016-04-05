@@ -1,4 +1,5 @@
 import logging
+from queue import Queue
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -16,7 +17,8 @@ class DatabaseManager:
 		self.engine = create_engine(db_path)
 		model.Base.metadata.create_all(self.engine)
 		self.session = sessionmaker(bind=self.engine)()
-		logging.debug("DatabaseManager: Session started with path: %s", db_path)
+		self.logger = logging.getLogger(type(self).__name__)
+		self.logger.debug("DatabaseManager: Session started with path: %s", db_path)
 
 	def add (self, data):
 		"""
@@ -26,9 +28,9 @@ class DatabaseManager:
 		try:
 			self.session.add(data)
 			self.session.commit()
-			logging.debug("Element %s added", data.header)
+			self.logger.debug("Element %s added", data.header)
 		except AttributeError as err:
-			logging.error("AtributeError: %s", err)
+			self.logger.error("AtributeError: %s", err)
 
 	def add_many (self, data):
 		"""
@@ -40,15 +42,16 @@ class DatabaseManager:
 				self.session.add(data)
 
 			self.session.commit()
-			logging.debug("%d elements added", len(data))
+			self.logger.debug("%d elements added", len(data))
 		except ValueError as err:
-			logging.error("Value error: %s", err)
+			self.logger.error("Value error: %s", err)
 
 	def add_queue (self, queue):
 		"""
 		Adds many from queue
 		:param queue: Model type data queue
 		"""
+		assert isinstance(queue, Queue)
 		while not queue.empty():
 			element = queue.get()
 			# Checking if element is not none to ensure that there is provided data
