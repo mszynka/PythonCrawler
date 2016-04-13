@@ -1,9 +1,8 @@
 import sys
-import threading
-from queue import Queue
 
 import input
-from Thread.thread import ThreadParser
+from Mediator.mediator import Mediator
+from Thread.worker import Worker
 from base_class import BaseClass
 
 
@@ -15,27 +14,18 @@ class ThreadManager(BaseClass):
 		:param max_workers: Max number of threads used as workers
 		"""
 		super().__init__()
-		self.max_workers = max_workers
+		self._max_workers = max_workers
 		self._threads = []
-		self.input_size = len(input.links_list)
-		# Input queue with lock
-		self.qlock = threading.Lock()
-		self.queue = Queue()
-		# Output queue with lock
-		self.out_qlock = threading.Lock()
-		self.out_queue = Queue()
-		# Initializing input queue
-		for item in input.links_list:
-			self.queue.put(item)
-		# TODO: create self.logger with format interceptor with class name or throw it into global interceptor
+		self._input_size = len(input.links_list)
+		self.mediator = Mediator(input.links_list, self._input_size)
 		self.logger.debug("Initialized with %d elements in queue", len(input.links_list))
 
 	def create_threads (self):
 		"""
 		Creates workers
 		"""
-		for i in range(0, self.max_workers):
-			self._threads.append(ThreadParser(self))
+		for i in range(0, self._max_workers):
+			self._threads.append(Worker(self.mediator, self._max_workers))
 		self.logger.debug("Created %d threads", len(self._threads))
 
 	def start_threads (self):
@@ -62,7 +52,7 @@ class ThreadManager(BaseClass):
 		"""
 		# noinspection PyAttributeOutsideInit
 		self.start_time = start
-		self.logger.debug("Started processing on all workers with %d elements in queue", self.queue.qsize())
+		self.logger.debug("Started processing on all workers with %d elements in queue", self._input_size)
 		self.create_threads()
 		self.start_threads()
 		self.join_all()

@@ -28,7 +28,7 @@ class Crawler(Thread):
 				:param url: base url to start crawling with
 				:return: boolean upon success/failure
 			"""
-		self._pagesToVisit = self._parser.tokenize_links(url)  # Crawler page's links array
+		self._pagesToVisit = self._parser.tokenize_links(url)  # Crawler page's links array FIX
 
 		url = "http://" + str(list(self._pagesToVisit.keys())[0])
 		self.logger.info("Crawling: " + url)
@@ -37,7 +37,7 @@ class Crawler(Thread):
 		# noinspection PyBroadException
 		try:
 			self.logger.debug(str.join(" ", [len(self._pagesVisited), " Visiting: ", url]))
-			data, links = self._parser.get_links(url)
+			data, links = self._parser.get_links(url)  # FIX
 			self._pagesToVisit += links
 		except urllib.error.HTTPError as e:
 			self.logger.debug(str.join(" ", [str(e.code), str(e.reason)]))
@@ -55,6 +55,8 @@ class Crawler(Thread):
 		:param url: URL to get the response
 		:returns: urllb.request.urlopen response
 		"""
+		if url is None:
+			return False
 		try:
 			request = urllib.request.Request(url, headers={ 'User-Agent': 'Wget/1.9.1' })  # User-Agent hack for getting
 			response = urlopen(request)
