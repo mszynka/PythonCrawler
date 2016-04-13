@@ -56,7 +56,7 @@ class ThreadParser(BaseClass, threading.Thread):
 		start = timer()
 		response = Crawler().execute_request(url)
 		if response:
-			parsed_data = self.parser.parse(response, url)
+			parsed_data, urls = self.parser.parse(response, url)
 		else:
 			parsed_data = None
 		end = timer()

@@ -52,7 +52,6 @@ class DatabaseManager(BaseClass):
 		Adds many from queue
 		:param queue: Model type data queue
 		"""
-		print(queue)
 		while not queue.empty():
 			element = queue.get()
 			# Checking if element is not none to ensure that there is provided data
