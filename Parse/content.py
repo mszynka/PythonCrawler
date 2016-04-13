@@ -7,6 +7,7 @@ from Parse.base import BaseParser
 class ContentParser(BaseParser):
 	def parse (self, response, url):
 		# TODO: Invent another parsing method
+		# TODO: Template resolver etc
 		pq_parser = PyQuery(response)
 
 		site_main = pq_parser('div.site-main')

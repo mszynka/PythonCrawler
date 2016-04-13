@@ -1,11 +1,9 @@
-import logging
 from abc import abstractmethod, ABCMeta
 
+from base_class import BaseClass
 
-class BaseParser(metaclass=ABCMeta):
-	def __init__ (self):
-		self.logger = logging.getLogger(type(self).__name__)
 
+class BaseParser(BaseClass, metaclass=ABCMeta):
 	@abstractmethod
 	def parse (self, response, url: str):
 		pass

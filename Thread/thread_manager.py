@@ -1,20 +1,20 @@
-import logging
 import sys
 import threading
 from queue import Queue
 
 import input
 from Thread.thread import ThreadParser
+from base_class import BaseClass
 
 
-class ThreadManager:
+class ThreadManager(BaseClass):
 	def __init__ (self, max_workers):
 		"""
 		Default constructor
 		Intializing threads list, queues with locks
 		:param max_workers: Max number of threads used as workers
 		"""
-		self.logger = logging.getLogger(type(self).__name__)
+		super().__init__()
 		self.max_workers = max_workers
 		self._threads = []
 		self.input_size = len(input.links_list)

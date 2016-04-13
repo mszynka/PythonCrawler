@@ -3,26 +3,26 @@
 	 Main module
 ----------------------
 """
-import logging
 from timeit import default_timer as timer
 
 from Database.database_manager import DatabaseManager
 from Log.logger_manager import LoggerManager
 from Thread.thread_manager import ThreadManager
+from base_class import BaseClass
 
 
-class Main:
+class Main(BaseClass):
 	def __init__ (self, max_threads):
 		"""
 		Default constructor
 		Initiates DB manager, Thread manager and max workers
 		:param max_threads: Max workers value
 		"""
+		super().__init__();
 		self.dbmanager = DatabaseManager()
 		self.max_threads = max_threads
 		self.tmanager = ThreadManager(max_threads)
 		self.logmanager = LoggerManager()
-		self.logger = logging.getLogger(type(self).__name__)
 
 	def compute_with_tmanager (self):
 		"""

@@ -1,21 +1,21 @@
-import logging
 import sys
 import threading
 from timeit import default_timer as timer
 
 from Crawl.crawler import Crawler
 from Parse.parser import Parser
+from base_class import BaseClass
 
 
-class ThreadParser(threading.Thread):
+class ThreadParser(BaseClass, threading.Thread):
 	def __init__ (self, manager):
 		"""
 		Default constructor
 		:param manager: To access parent thread
 		"""
+		super().__init__()
 		threading.Thread.__init__(self)
 		self.manager = manager
-		self.logger = logging.getLogger(type(self).__name__)
 		self.logger.debug("Thread initialized. Assuming %3d max threads", self.manager.max_workers)
 		self.parser = Parser()
 

@@ -1,23 +1,23 @@
-import logging
 from queue import Queue
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from Database import model
+from base_class import BaseClass
 
 
-class DatabaseManager:
+class DatabaseManager(BaseClass):
 	def __init__ (self):
 		"""
 		Default constructor
 		Setting up Database Engine, paths, binding models and creating session
 		"""
+		super().__init__()
 		db_path = "sqlite:///Database/parsed.db"
 		self.engine = create_engine(db_path)
 		model.Base.metadata.create_all(self.engine)
 		self.session = sessionmaker(bind=self.engine)()
-		self.logger = logging.getLogger(type(self).__name__)
 		self.logger.debug("DatabaseManager: Session started with path: %s", db_path)
 
 	def add (self, data):
@@ -51,6 +51,7 @@ class DatabaseManager:
 		Adds many from queue
 		:param queue: Model type data queue
 		"""
+		print(queue)
 		assert isinstance(queue, Queue)
 		while not queue.empty():
 			element = queue.get()
