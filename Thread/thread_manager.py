@@ -8,7 +8,7 @@ from base_class import BaseClass
 
 
 class ThreadManager(BaseClass):
-	def __init__ (self, max_workers):
+	def __init__ (self, max_workers: int):
 		"""
 		Default constructor
 		Intializing threads list, queues with locks

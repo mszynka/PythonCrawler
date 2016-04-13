@@ -45,7 +45,7 @@ class ThreadParser(BaseClass, threading.Thread):
 
 		self.logger.debug("Thread finished")
 
-	def parse_and_log_time (self, url):
+	def parse_and_log_time (self, url: str):
 		"""
 		Runs parser, logger and timer for self.logger.and statistics
 		:param url: URL as entry point for parser
@@ -64,6 +64,7 @@ class ThreadParser(BaseClass, threading.Thread):
 		self.logger.debug("Thread finished processing. Elapsed: %.2f s", end - start)
 		return parsed_data
 
+	# TODO: Model class
 	def return_data_to_manager (self, parsed_data):
 		"""
 		Writes parsed data to output queue

@@ -11,7 +11,8 @@ from Parse.base import BaseParser
 
 
 class LinkParser(BaseParser):
-	def parse (self, response, url):
+	# TODO: Response class
+	def parse (self, response, url: str):
 		pq_parser = PyQuery(response)
 		links = [x.attrib["href"] for x in pq_parser("a[href]")]
 

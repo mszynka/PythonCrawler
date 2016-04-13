@@ -20,17 +20,18 @@ class Mediator(BaseClass):
 	def get_url (self, count=1):
 		raise NotImplementedError
 
-	def push_url (self):
+	def push_urls (self, urls: list):
 		raise NotImplementedError
 
 	def _send_models (self):
 		raise NotImplementedError
 
-	def push_models (self):
+	# TODO: Derivative type Model
+	def push_models (self, model):
 		raise NotImplementedError
 
-	def get_response (self):
+	def get_response (self, count=1):
 		raise NotImplementedError
 
-	def push_response (self):
+	def push_response (self, response):
 		raise NotImplementedError

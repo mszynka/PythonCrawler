@@ -18,7 +18,8 @@ class Parser(BaseParser):
 		self._link_p = LinkParser()
 		super().__init__()
 
-	def parse (self, response, url):
+	# TODO: Response class
+	def parse (self, response, url: str):
 		"""
 		Parses response from urlopen
 		:param response: urrlib.request.urlopen product

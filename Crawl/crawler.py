@@ -22,7 +22,7 @@ class Crawler(Thread):
 		self._pagesToVisit = dict()  # Dict of pages to crawl
 		self.logger = logging.getLogger(type(self).__name__)
 
-	def crawl (self, url):
+	def crawl (self, url: str):
 		"""
 				Crawler crawling method
 				:param url: base url to start crawling with
@@ -49,7 +49,7 @@ class Crawler(Thread):
 		self.logger.info(str.join(" ", ["Visited", str(len(self._pagesVisited)), "pages"]))
 		return True
 
-	def execute_request (self, url):
+	def execute_request (self, url: str):
 		"""
 		Executes a request on given URL
 		:param url: URL to get the response

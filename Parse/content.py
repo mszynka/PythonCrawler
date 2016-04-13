@@ -5,7 +5,8 @@ from Parse.base import BaseParser
 
 
 class ContentParser(BaseParser):
-	def parse (self, response, url):
+	# TODO: Response class
+	def parse (self, response, url: str):
 		# TODO: Invent another parsing method
 		# TODO: Template resolver etc
 		pq_parser = PyQuery(response)

@@ -20,6 +20,7 @@ class DatabaseManager(BaseClass):
 		self.session = sessionmaker(bind=self.engine)()
 		self.logger.debug("DatabaseManager: Session started with path: %s", db_path)
 
+	# TODO: Model derivative class
 	def add (self, data):
 		"""
 		Adds an data object to session
@@ -32,7 +33,7 @@ class DatabaseManager(BaseClass):
 		except AttributeError as err:
 			self.logger.error("AtributeError: %s", err)
 
-	def add_many (self, data):
+	def add_many (self, data: list):
 		"""
 		Adds many from list
 		:param data: Model type data list
@@ -46,13 +47,12 @@ class DatabaseManager(BaseClass):
 		except ValueError as err:
 			self.logger.error("Value error: %s", err)
 
-	def add_queue (self, queue):
+	def add_queue (self, queue: Queue):
 		"""
 		Adds many from queue
 		:param queue: Model type data queue
 		"""
 		print(queue)
-		assert isinstance(queue, Queue)
 		while not queue.empty():
 			element = queue.get()
 			# Checking if element is not none to ensure that there is provided data

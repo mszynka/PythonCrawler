@@ -12,7 +12,7 @@ from base_class import BaseClass
 
 
 class Main(BaseClass):
-	def __init__ (self, max_threads):
+	def __init__ (self, max_threads: int):
 		"""
 		Default constructor
 		Initiates DB manager, Thread manager and max workers
