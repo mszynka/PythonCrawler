@@ -30,18 +30,23 @@ class Mediator(BaseClass):
 		if count < 1:
 			raise AttributeError
 		else:
-			self._urls_get += count
-			self._url_qlock.acquire()  # TODO: use await for better thread utilization
-			if not self._url_queue.empty():
-				urls = self._url_queue.get(count)  # TODO: get n{1-5, or benchmarks} urls (for await statement)
+			urls = None
+			try:
+				self._url_qlock.acquire()  # TODO: use await for better thread utilization
+				if not self._url_queue.empty():
+					urls = self._url_queue.get(count)  # TODO: get n{1-5, or benchmarks} urls (for await statement)
+					self._urls_get += count
+			finally:
 				self._url_qlock.release()
-				return urls
+			return urls
 
 	def push_urls (self, urls: list):
-		self._url_qlock.acquire()  # TODO: use await for better thread utilization
-		if not self._url_queue.empty():
-			for url in urls:
-				self._url_queue.put(url)
+		try:
+			self._url_qlock.acquire()  # TODO: use await for better thread utilization
+			if not self._url_queue.empty():
+				for url in urls:
+					self._url_queue.put(url)
+		finally:
 			self._url_qlock.release()
 
 	def get_models (self):

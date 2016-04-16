@@ -31,24 +31,22 @@ class Worker(BaseClass, threading.Thread):
 		"""
 		Default overriden thread run method
 		"""
-		self.logger.debug("Running")
 		keep_worker = True
 
 		while keep_worker:
 			# Get data
 			url = self.mediator.get_url()
 
-			# Parse
-			data_model, urls = self.parse_and_log_time(url)
+			if url is not None:
+				# Parse
+				data_model, urls = self.parse_and_log_time(url)
 
-			# Save
-			self.mediator.push_urls(urls)
-			self.mediator.push_models(data_model)
+				# Save
+				self.mediator.push_urls(urls)
+				self.mediator.push_models(data_model)
 
-			self.mediator.update_progressbar()
+				self.mediator.update_progressbar()
 			keep_worker = self.mediator.keep_workers()
-
-		self.logger.debug("Worker finished")
 
 	# TODO: change to mediator and add threads for parsing, crawling and analytics
 	def parse_and_log_time (self, url: str):
