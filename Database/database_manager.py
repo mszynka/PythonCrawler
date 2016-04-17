@@ -3,8 +3,8 @@ from queue import Queue
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from Base.base_class import BaseClass
 from Database import model
-from base_class import BaseClass
 
 
 class DatabaseManager(BaseClass):

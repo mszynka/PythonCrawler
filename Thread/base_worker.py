@@ -2,8 +2,8 @@ import threading
 from abc import abstractmethod
 from timeit import default_timer as timer
 
+from Base.base_class import BaseClass
 from Mediator.mediator import Mediator
-from base_class import BaseClass
 
 
 class BaseWorker(BaseClass, threading.Thread):
@@ -23,5 +23,5 @@ class BaseWorker(BaseClass, threading.Thread):
 		self.logger.debug("Worker finished")
 
 	@abstractmethod
-	def task (self):
+	def task (self) -> bool:
 		pass

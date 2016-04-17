@@ -1,10 +1,10 @@
 from abc import abstractmethod, ABCMeta
 
-from base_class import BaseClass
+from Base.base_class import BaseClass
+from Parse.response import Response
 
 
 class BaseParser(BaseClass, metaclass=ABCMeta):
 	@abstractmethod
-	# TODO: Response class
-	def parse (self, response, url: str):
+	def parse (self, response: Response):
 		pass

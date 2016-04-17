@@ -5,10 +5,10 @@
 """
 from timeit import default_timer as timer
 
+from Base.base_class import BaseClass
 from Database.database_manager import DatabaseManager
 from Log.logger_manager import LoggerManager
 from Thread.thread_manager import ThreadManager
-from base_class import BaseClass
 
 
 class Main(BaseClass):

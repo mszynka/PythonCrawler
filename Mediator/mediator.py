@@ -2,7 +2,9 @@ import sys
 import threading
 from queue import Queue
 
-from base_class import BaseClass
+from Base.base_class import BaseClass
+from Database.models import Models
+from Parse.response import Response, Responses
 
 
 class Mediator(BaseClass):
@@ -26,21 +28,19 @@ class Mediator(BaseClass):
 		for item in seed:
 			self._url_queue.put(item)
 
-	def get_url (self, count=1):
-		if count < 1:
-			raise AttributeError
-		else:
-			urls = None
-			try:
-				self._url_qlock.acquire()  # TODO: use await for better thread utilization
-				if not self._url_queue.empty():
-					urls = self._url_queue.get(count)  # TODO: get n{1-5, or benchmarks} urls (for await statement)
-					self._urls_get += count
-			finally:
-				self._url_qlock.release()
-			return urls
+	def get_url (self, count=1) -> list:
+		assert (count > 0)
+		urls = None
+		try:
+			self._url_qlock.acquire()  # TODO: use await for better thread utilization
+			if not self._url_queue.empty():
+				urls = list(self._url_queue.get(count))  # TODO: get n{1-5, or benchmarks} urls (for await statement)
+				self._urls_get += count
+		finally:
+			self._url_qlock.release()
+		return urls
 
-	def push_urls (self, urls: list):
+	def push_urls (self, urls: list) -> None:
 		try:
 			self._url_qlock.acquire()  # TODO: use await for better thread utilization
 			if not self._url_queue.empty():
@@ -49,21 +49,58 @@ class Mediator(BaseClass):
 		finally:
 			self._url_qlock.release()
 
-	def get_models (self):
-		raise NotImplementedError
+	def get_models (self) -> Models:
+		models = Models()
+		try:
+			self._model_qlock.acquire()  # TODO: use await for better thread utilization
+			while not self._model_queue.empty():
+				models.append(self._model_queue.get())
+		finally:
+			self._model_qlock.release()
+		return models
 
-	# TODO: Derivative type Model
-	def push_models (self, models: list):
-		self._items_parsed += len(models)
-		raise NotImplementedError
+	def push_models (self, models: Models) -> None:
+		assert isinstance(models, Models)
+		try:
+			self._model_qlock.acquire()  # TODO: use await for better thread utilization
+			self._items_parsed += len(models)
+			if not self._model_queue.empty():
+				for model in models:
+					self._model_queue.put(model)
+		finally:
+			self._model_qlock.release()
 
-	def get_response (self, count=1):
-		raise NotImplementedError
+	def get_responses (self, count=1) -> Responses:
+		assert (count > 0)
+		responses = None
+		try:
+			self._response_qlock.acquire()  # TODO: use await for better thread utilization
+			if not self._response_queue.empty():
+				responses = Responses(
+					self._response_queue.get(count))  # TODO: get n{1-5, or benchmarks} urls (for await statement)
+		finally:
+			self._response_qlock.release()
+		return responses
 
-	# TODO: Response class
-	def push_response (self, response):
-		self._responses_set += 1
-		raise NotImplementedError
+	# TODO: Assertion tests with usages, types and magic
+	def push_response (self, response: Response) -> None:
+		assert isinstance(response, Response)
+		try:
+			self._response_qlock.acquire()  # TODO: use await for better thread utilization
+			self._response_queue.put(response)
+			self._responses_set += 1
+		finally:
+			self._response_qlock.release()
+
+	def push_responses (self, responses: Responses) -> None:
+		assert isinstance(responses, Responses)
+		try:
+			self._response_qlock.acquire()  # TODO: use await for better thread utilization
+			for response in responses:
+				self._response_queue.put(response)
+				self._responses_set += 1
+		finally:
+			self._response_qlock.release()
 
 	def update_progressbar (self):
 		"""
@@ -80,18 +117,18 @@ class Mediator(BaseClass):
 			else:
 				progress_bar += " "
 		sys.stdout.write("\r")
-		sys.stdout.write("%s %s Urls get: %d, Responses set: %d, Items parsed: %d" % (
+		sys.stdout.write("%s %s%% Urls get: %d, Responses set: %d, Items parsed: %d" % (
 			progress_bar, str(count_progress), self._urls_get, self._responses_set, self._items_parsed))
 		sys.stdout.flush()
 
-	def keep_workers (self):
-		return not (self._url_queue.empty() and self._model_queue.empty() and self._response_queue.empty())
+	def keep_workers (self) -> bool:
+		return not (self.keep_crawler() and self.keep_parser() and self.keep_database())
 
-	def keep_crawler (self):
+	def keep_crawler (self) -> bool:
 		return not self._url_queue.empty()
 
-	def keep_parser (self):
+	def keep_parser (self) -> bool:
 		return not self._response_queue.empty()
 
-	def keep_database (self):
+	def keep_database (self) -> bool:
 		return not self._model_queue.empty()

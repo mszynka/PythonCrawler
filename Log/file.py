@@ -6,7 +6,7 @@ from Log.base import BaseLogger
 class FileLogger(BaseLogger):
 	def __init__ (self):
 		super().__init__()
-		self.filename = 'parser.log'
+		self.filename = 'webcrawler.log'
 
 	def configure (self):
 		"""

@@ -1,4 +1,4 @@
 from main import Main
 
-parser = Main(7)
-parser.run()
+webcrawler = Main(max_threads=7)
+webcrawler.run()

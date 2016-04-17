@@ -8,12 +8,12 @@ from urllib.parse import urlparse
 from pyquery import PyQuery
 
 from Parse.base import BaseParser
+from Parse.response import Response
 
 
 class LinkParser(BaseParser):
-	# TODO: Response class
-	def parse (self, response, url: str):
-		pq_parser = PyQuery(response)
+	def parse (self, response: Response):
+		pq_parser = PyQuery(response.html)
 		links = [x.attrib["href"] for x in pq_parser("a[href]")]
 
 		return self._tokenize_links(links)

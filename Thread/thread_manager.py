@@ -1,9 +1,9 @@
 import sys
 
 import input
+from Base.base_class import BaseClass
 from Mediator.mediator import Mediator
 from Thread.worker import Worker
-from base_class import BaseClass
 
 
 class ThreadManager(BaseClass):
