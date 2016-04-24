@@ -2,9 +2,12 @@ from queue import Queue
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.exc import UnmappedInstanceError
 
 from Base.base_class import BaseClass
 from Database import model
+from Database.model import ParsedObject, Base
+from Database.models import Models
 
 
 class DatabaseManager(BaseClass):
@@ -20,30 +23,38 @@ class DatabaseManager(BaseClass):
 		self.session = sessionmaker(bind=self.engine)()
 		self.logger.debug("DatabaseManager: Session started with path: %s", db_path)
 
-	# TODO: Model derivative class
-	def add (self, data):
+	def add (self, data: Base):
 		"""
 		Adds an data object to session
 		:param data: Model type data object
 		"""
+		assert isinstance(data, Base)
 		try:
-			self.session.add(data)
-			self.session.commit()
-			self.logger.debug("Element %s added", data.header)
+			if data is not None:
+				assert isinstance(data, ParsedObject)
+				self.session.add(data)
+				self.session.commit()
+				self.logger.debug("Element %s added", data.header)
 		except AttributeError as err:
 			self.logger.error("AtributeError: %s", err)
+		except AssertionError as err:
+			self.logger.error("AssertionError: %s", err)
+		except UnmappedInstanceError as err:
+			self.logger.error("UnmappedInstanceError: %s", err)
 
-	def add_many (self, data: list):
+	def add_many (self, data_container: list):
 		"""
 		Adds many from list
-		:param data: Model type data list
+		:param data_container: Model type data list
 		"""
+		assert isinstance(data_container, Models)
 		try:
-			for data in data:
+			for data in data_container:
+				assert isinstance(data, Base)
 				self.session.add(data)
 
 			self.session.commit()
-			self.logger.debug("%d elements added", len(data))
+			self.logger.debug("%d elements added", len(data_container))
 		except ValueError as err:
 			self.logger.error("Value error: %s", err)
 
@@ -52,8 +63,10 @@ class DatabaseManager(BaseClass):
 		Adds many from queue
 		:param queue: Model type data queue
 		"""
+		assert isinstance(queue, Queue)
 		while not queue.empty():
 			element = queue.get()
+			assert isinstance(element, Base)
 			# Checking if element is not none to ensure that there is provided data
 			if element is not None:
 				self.add(element)

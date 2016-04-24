@@ -6,7 +6,7 @@ from Mediator.mediator import Mediator
 from Thread.worker import Worker
 
 
-class ThreadManager(BaseClass):
+class WorkerManager(BaseClass):
 	def __init__ (self, max_workers: int):
 		"""
 		Default constructor
@@ -15,7 +15,7 @@ class ThreadManager(BaseClass):
 		"""
 		super().__init__()
 		self._max_workers = max_workers
-		self._threads = []
+		self._threads = list()
 		self._input_size = len(input.links_list)
 		self.mediator = Mediator(input.links_list, self._input_size)
 		self.logger.debug("Initialized with %d elements in queue", len(input.links_list))

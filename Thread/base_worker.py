@@ -9,6 +9,7 @@ from Mediator.mediator import Mediator
 class BaseWorker(BaseClass, threading.Thread):
 	def __init__ (self, mediator: Mediator):
 		super().__init__()
+		threading.Thread.__init__(self)
 		self.mediator = mediator
 
 	def run (self):

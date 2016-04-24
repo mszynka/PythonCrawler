@@ -1,8 +1,7 @@
 import threading
 
 from Base.base_class import BaseClass
-from Crawl.crawler import Crawler
-from Database.models import Models
+from Database.database_manager import DatabaseManager
 from Mediator.mediator import Mediator
 from Parse.parser import Parser
 from Thread.crawler_worker import CrawlerWorker
@@ -23,10 +22,12 @@ class Worker(BaseClass, threading.Thread):
 		self.logger.debug("Initialized. Assuming %3d max threads", max_workers)
 
 		# Define workers
-		self.parse_worker = ParserWorker(self.mediator)
-		self.crawl_worker = CrawlerWorker(self.mediator)
-		self.database_worker = DatabaseWorker(self.mediator)
 		self.parser = Parser()
+		self.db = DatabaseManager()
+
+		self.parse_worker = ParserWorker(self.mediator, self.parser)
+		self.crawl_worker = CrawlerWorker(self.mediator)
+		self.database_worker = DatabaseWorker(self.mediator, self.db)
 
 	def run (self) -> None:
 		"""
@@ -34,41 +35,12 @@ class Worker(BaseClass, threading.Thread):
 		"""
 		keep_worker = True
 		self.mediator.update_progressbar()
+		self.crawl_worker.start()
+		self.parse_worker.start()
+		self.database_worker.start()
 
 		while keep_worker:
-			# Get data
-			in_urls = self.mediator.get_url()
-			out_urls = list()
-			models = Models()
-
-			# Parse
-			if in_urls is not None:
-				for url in in_urls:
-					omodel, ourl = self.parse_and_log_time(url)
-					out_urls.append(ourl)
-					models.append(omodel)
-
-				# Save
-				self.mediator.push_urls(out_urls)
-				self.mediator.push_models(models)
-
-				self.mediator.update_progressbar()
-			keep_worker = self.mediator.keep_workers()
-
-	# TODO: change to mediator and workers
-	def parse_and_log_time (self, url: str) -> tuple:
-		"""
-		Runs webcrawler, logger and timer for self.logger.and statistics
-		:param url: URL as entry point for webcrawler
-		:returns: Parsed data from webcrawler
-		"""
-		self.logger.debug("Acquired some data and starts processing")
-
-		response = Crawler().execute_request(url)
-		if response:
-			data_model, urls = self.parser.parse(response)
-		else:
-			data_model = None
-			urls = list()
-
-		return data_model, urls
+			self.crawl_worker.join(1)  # TODO: Benchmark perfect time
+			self.parse_worker.join(1)
+			self.database_worker.join(1)
+			keep_worker = self.crawl_worker.is_alive() and self.parse_worker.is_alive() and self.database_worker.is_alive()
