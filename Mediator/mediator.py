@@ -34,7 +34,8 @@ class Mediator(BaseClass):
 		try:
 			self._url_qlock.acquire()  # TODO: use await for better thread utilization
 			if not self._url_queue.empty():
-				urls = list(self._url_queue.get(count))  # TODO: get n{1-5, or benchmarks} urls (for await statement)
+				urls = self._url_queue.get()  # TODO: count  # TODO: get n{1-5, or benchmarks} urls (for await
+				#  statement)
 				self._urls_get += count
 		finally:
 			self._url_qlock.release()
@@ -72,12 +73,13 @@ class Mediator(BaseClass):
 
 	def get_responses (self, count=1) -> Responses:
 		assert (count > 0)
-		responses = None
+		responses = Responses()
 		try:
 			self._response_qlock.acquire()  # TODO: use await for better thread utilization
 			if not self._response_queue.empty():
-				responses = Responses(
-					self._response_queue.get(count))  # TODO: get n{1-5, or benchmarks} urls (for await statement)
+				responses.append(
+					self._response_queue.get())  # TODO: count  # TODO: get n{1-5, or benchmarks} urls (for await
+			# statement)
 		finally:
 			self._response_qlock.release()
 		return responses

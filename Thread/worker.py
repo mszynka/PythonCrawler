@@ -25,9 +25,9 @@ class Worker(BaseClass, threading.Thread):
 		self.parser = Parser()
 		self.db = DatabaseManager()
 
-		self.parse_worker = ParserWorker(self.mediator, self.parser)
-		self.crawl_worker = CrawlerWorker(self.mediator)
-		self.database_worker = DatabaseWorker(self.mediator, self.db)
+		self.parse_worker = ParserWorker(self.mediator, self, self.parser)
+		self.crawl_worker = CrawlerWorker(self.mediator, self)
+		self.database_worker = DatabaseWorker(self.mediator, self, self.db)
 
 	def run (self) -> None:
 		"""
@@ -40,7 +40,7 @@ class Worker(BaseClass, threading.Thread):
 		self.database_worker.start()
 
 		while keep_worker:
-			self.crawl_worker.join(1)  # TODO: Benchmark perfect time
-			self.parse_worker.join(1)
-			self.database_worker.join(1)
+			self.crawl_worker.join(3)  # TODO: Benchmark perfect time
+			self.parse_worker.join(3)
+			self.database_worker.join(3)
 			keep_worker = self.crawl_worker.is_alive() and self.parse_worker.is_alive() and self.database_worker.is_alive()

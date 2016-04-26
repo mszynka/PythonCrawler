@@ -4,8 +4,8 @@ from Thread.base_worker import BaseWorker
 
 
 class DatabaseWorker(BaseWorker):
-	def __init__ (self, mediator: Mediator, db: DatabaseManager):
-		super().__init__(mediator)
+	def __init__ (self, mediator: Mediator, parent, db: DatabaseManager):
+		super().__init__(mediator, parent)
 		self.db = db
 
 	def task (self) -> bool:

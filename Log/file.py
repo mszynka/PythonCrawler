@@ -12,7 +12,7 @@ class FileLogger(BaseLogger):
 		"""
 		Configures logger and initiates logging by inserting info message
 		"""
-		logging.basicConfig(filename=self.filename, level=logging.DEBUG, filemode='a',
+		logging.basicConfig(filename=self.filename, level=logging.DEBUG, filemode='w',
 		                    format='%(asctime)s %(threadName)-12s %(name)-17s %(levelname)-8s %(message)s',
 		                    datefmt='%m-%d %H:%M:%S')
 
