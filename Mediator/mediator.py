@@ -64,7 +64,7 @@ class Mediator(BaseClass):
 		assert isinstance(models, Models)
 		try:
 			self._model_qlock.acquire()  # TODO: use await for better thread utilization
-			self._items_parsed += len(models)
+			self._items_parsed += 1
 			if not self._model_queue.empty():
 				for model in models:
 					self._model_queue.put(model)
