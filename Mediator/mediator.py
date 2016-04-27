@@ -86,30 +86,31 @@ class Mediator(BaseClass):
 
 	# TODO: Assertion tests with usages, types and magic
 	def push_response (self, response: Response) -> None:
-		assert isinstance(response, Response)
-		try:
-			self._response_qlock.acquire()  # TODO: use await for better thread utilization
-			self._response_queue.put(response)
-			self._responses_set += 1
-		finally:
-			self._response_qlock.release()
-
-	def push_responses (self, responses: Responses) -> None:
-		assert isinstance(responses, Responses)
-		try:
-			self._response_qlock.acquire()  # TODO: use await for better thread utilization
-			for response in responses:
+		if isinstance(response, Response) and response is not None:
+			try:
+				self._response_qlock.acquire()  # TODO: use await for better thread utilization
 				self._response_queue.put(response)
 				self._responses_set += 1
-		finally:
-			self._response_qlock.release()
+			finally:
+				self._response_qlock.release()
+
+	def push_responses (self, responses: Responses) -> None:
+		if isinstance(responses, Responses) and responses is not None:
+			try:
+				self._response_qlock.acquire()  # TODO: use await for better thread utilization
+				for response in responses:
+					if response is not None:
+						self._response_queue.put(response)
+						self._responses_set += 1
+			finally:
+				self._response_qlock.release()
 
 	def update_progressbar (self):
 		"""
 		Updates progress bar when thread ended a task
 		"""
 		if self._url_queue.qsize() > 0:
-			count_progress = int((1 - (self._url_queue.qsize() / self._input_size)) * 100)
+			count_progress = int((1 - (self._urls_get / self._url_queue.qsize())) * 100)
 		else:
 			count_progress = 100
 		progress_bar = ""
@@ -119,18 +120,23 @@ class Mediator(BaseClass):
 			else:
 				progress_bar += " "
 		sys.stdout.write("\r")
-		sys.stdout.write("%s %s%% Urls get: %d, Responses set: %d, Items parsed: %d" % (
-			progress_bar, str(count_progress), self._urls_get, self._responses_set, self._items_parsed))
+		sys.stdout.write("%s %s%% Urls set: %d, Urls get: %d, Responses set: %d, Items parsed: %d" % (
+			progress_bar, str(count_progress), self._url_queue.__sizeof__(), self._urls_get, self._responses_set,
+			self._items_parsed))
 		sys.stdout.flush()
 
 	def keep_workers (self) -> bool:
 		return not (self.keep_crawler() and self.keep_parser() and self.keep_database())
 
 	def keep_crawler (self) -> bool:
-		return not self._url_queue.empty()
+		return self.keep_parser()
+
+	# return not self._url_queue.empty()
 
 	def keep_parser (self) -> bool:
-		return not self._response_queue.empty()
+		return not (self._url_queue.__sizeof__() <= self._items_parsed)
 
 	def keep_database (self) -> bool:
-		return not self._model_queue.empty()
+		return not (self._urls_get >= self._items_parsed)
+
+	# return not self._model_queue.empty()

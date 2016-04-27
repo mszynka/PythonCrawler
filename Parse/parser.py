@@ -38,3 +38,4 @@ class Parser(BaseParser):
 			return model, links
 		except:
 			self.logger.error("Parsing was unsuccessful")
+			return None, None
