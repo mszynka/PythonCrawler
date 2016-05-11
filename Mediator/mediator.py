@@ -3,6 +3,7 @@ import threading
 from queue import Queue
 
 from Base.base_class import BaseClass
+from Database.model import ParsedObject
 from Database.models import Models
 from Parse.response import Response, Responses
 
@@ -15,6 +16,7 @@ class Mediator(BaseClass):
 		self._urls_get = 0
 		self._items_parsed = 0
 		self._responses_set = 0
+		self._urls_set = input_size
 
 		self._url_qlock = threading.Lock()
 		self._url_queue = Queue()
@@ -47,6 +49,7 @@ class Mediator(BaseClass):
 			if not self._url_queue.empty():
 				for url in urls:
 					self._url_queue.put(url)
+					self._urls_set += 1
 		finally:
 			self._url_qlock.release()
 
@@ -64,10 +67,11 @@ class Mediator(BaseClass):
 		assert isinstance(models, Models)
 		try:
 			self._model_qlock.acquire()  # TODO: use await for better thread utilization
-			self._items_parsed += 1
 			if not self._model_queue.empty():
 				for model in models:
-					self._model_queue.put(model)
+					if isinstance(model, ParsedObject):
+						self._model_queue.put(model)
+						self._items_parsed += 1
 		finally:
 			self._model_qlock.release()
 
@@ -121,7 +125,7 @@ class Mediator(BaseClass):
 				progress_bar += " "
 		sys.stdout.write("\r")
 		sys.stdout.write("%s %s%% Urls set: %d, Urls get: %d, Responses set: %d, Items parsed: %d" % (
-			progress_bar, str(count_progress), self._url_queue.__sizeof__(), self._urls_get, self._responses_set,
+			progress_bar, str(count_progress), self._urls_set, self._urls_get, self._responses_set,
 			self._items_parsed))
 		sys.stdout.flush()
 
@@ -134,9 +138,9 @@ class Mediator(BaseClass):
 	# return not self._url_queue.empty()
 
 	def keep_parser (self) -> bool:
-		return not (self._url_queue.__sizeof__() <= self._items_parsed)
+		return self._url_queue.qsize() > self._items_parsed
 
 	def keep_database (self) -> bool:
-		return not (self._urls_get >= self._items_parsed)
+		return self.keep_crawler() and (self._model_queue.qsize() > 0)
 
 	# return not self._model_queue.empty()

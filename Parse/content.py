@@ -11,10 +11,10 @@ class ContentParser(BaseParser):
 		# TODO: Template resolver etc
 		pq_parser = PyQuery(response.html)
 
-		site_main = pq_parser('div.site-main')
-		content = site_main('.entry-content')
-		pheader = site_main('.entry-header')
-		pbody = content('pre:first')
-		pchords = content('p + pre')
+		site_main = pq_parser('body')
+		content = site_main('.post')
+		pheader = content('.gridly-copy h2')
+		pbody = content('.gridly-copy')
+		additional_url = content('.gridly-link')
 
-		return ParsedObject(header=pheader.text(), body=pbody.text(), chords=pchords.text(), url=response.url)
+		return ParsedObject(header=pheader.text(), body=pbody.text(), url=additional_url)

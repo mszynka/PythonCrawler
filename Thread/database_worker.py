@@ -15,7 +15,7 @@ class DatabaseWorker(BaseWorker):
 		# Save
 		if len(models) > 0 and models is not None:
 			self.db.add_many(models)
-			self.logger.debug("Saved %d tuples", len(models))
+			self.logger.info("Saved %d tuples", len(models))
 
 		# Return
 		return self.mediator.keep_database()

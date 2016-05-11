@@ -50,8 +50,8 @@ class DatabaseManager(BaseClass):
 		assert isinstance(data_container, Models)
 		try:
 			for data in data_container:
-				assert isinstance(data, Base)
-				self.session.add(data)
+				if isinstance(data, Base):
+					self.session.add(data)
 
 			self.session.commit()
 			self.logger.debug("%d elements added", len(data_container))

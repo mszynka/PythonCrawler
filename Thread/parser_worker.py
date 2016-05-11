@@ -33,8 +33,10 @@ class ParserWorker(BaseWorker):
 			# Save
 			self.mediator.push_models(models)
 			self.mediator.push_urls(urls)
-			self.logger.debug("Pushed %d models", len(models))
-			self.logger.debug("Pushed %d urls", len(urls))
+			if len(models) > 0:
+				self.logger.info("Pushed %d models", len(models))
+			if len(urls) > 0:
+				self.logger.info("Pushed %d urls", len(urls))
 
 		# Return
 		return self.mediator.keep_parser() or self._parent.crawl_worker.is_alive()

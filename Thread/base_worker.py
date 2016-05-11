@@ -22,8 +22,6 @@ class BaseWorker(BaseClass, threading.Thread):
 			end = timer()
 			self.logger.debug("Finished processing. Elapsed: %.2f s", end - start)
 
-		self.logger.debug("Worker finished")
-
 	@abstractmethod
 	def task (self) -> bool:
 		pass

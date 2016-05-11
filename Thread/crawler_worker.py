@@ -18,7 +18,8 @@ class CrawlerWorker(BaseWorker):
 
 			# Save
 			self.mediator.push_responses(responses)
-			self.logger.debug("Pushed %d responses", len(responses))
+			if len(responses) > 0:
+				self.logger.info("Pushed %d responses", len(responses))
 
 		# Return
 		return self.mediator.keep_crawler()
