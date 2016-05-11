@@ -8,41 +8,32 @@ from urllib.parse import urlparse
 from pyquery import PyQuery
 
 from Parse.base import BaseParser
+from Parse.response import Response
 
 
 class LinkParser(BaseParser):
-	def parse (self, response, url):
-		pq_parser = PyQuery(response)
-		links = [x.attrib["href"] for x in pq_parser("a[href]")]
+	# noinspection PyAttributeOutsideInit
+	def parse (self, response: Response):
+		self._response = response
+		self._parse_links()
+		self._fix_links()
 
-		return self._tokenize_links(links)
+		return self._links
 
-	def _tokenize_links (self, links):
-		"""
-		Link tokenizer for smart management
-		:param links: Links array or string
-		:return: Parsed links dict
-		"""
-		# TODO: remove this function
-		output_links_dict = dict()
+	def _parse_links (self):
+		pq_parser = PyQuery(self._response.html)
+		self._links = [x.attrib["href"] for x in pq_parser("a[href]")]
 
-		if isinstance(links, list):
-			self.logger.info("Tokenizer found list of links")
-			for link in links:
-				tmp_url = urlparse(link)
-				if tmp_url.path != '':
-					if tmp_url.netloc in output_links_dict:
-						output_links_dict[tmp_url.netloc].append({ tmp_url.path: False })
-					else:
-						output_links_dict[tmp_url.netloc] = [{ tmp_url.path: False }]
-				else:
-					output_links_dict[tmp_url.netloc] = [{ "/": False }]
-			return output_links_dict
-		elif isinstance(links, str):
-			self.logger.info("Tokenizer found single link")
-			tmp_url = urlparse(links)
-			if tmp_url.path != '':
-				output_links_dict[tmp_url.netloc] = [{ tmp_url.path: False }]
-			else:
-				output_links_dict[tmp_url.netloc] = [{ "/": False }]
-			return output_links_dict
+	def _fix_links (self):
+		self._get_host_name()
+		self._prepend_links_with_hostname()
+
+	def _get_host_name (self):
+		p_url = urlparse(self._response.url)
+		self.hostname = str.format("{0}://{1}", p_url.scheme, p_url.netloc)
+
+	def _prepend_links_with_hostname (self):
+		for iterator in range(0, len(self._links)):
+			if self._links[iterator][0] == "/":
+				# noinspection PyUnusedLocal
+				self._links[iterator] = str.format("{0}{1}", self.hostname, self._links[iterator])

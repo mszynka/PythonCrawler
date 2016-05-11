@@ -10,5 +10,4 @@ class ParsedObject(Base):
 	id = Column(Integer, primary_key=True)
 	header = Column(Unicode)
 	body = Column(Unicode)
-	chords = Column(Unicode)
 	url = Column(Unicode)
