@@ -33,10 +33,12 @@ class Worker(BaseClass, threading.Thread):
 		"""
 		Default overriden thread run method
 		"""
-		# keep_worker = True
+		keep_crawler = True
+		keep_parser = True
+		keep_db = True
 		self.mediator.update_progressbar()
 
-		# while keep_worker:
-		self.crawl_worker.run()
-		self.parse_worker.run()
-		self.database_worker.run()
+		while keep_crawler and keep_parser and keep_db:
+			keep_crawler = self.crawl_worker.run()
+			keep_parser = self.parse_worker.run()
+			keep_db = self.database_worker.run()

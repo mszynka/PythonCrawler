@@ -5,7 +5,6 @@
 """
 import time
 import urllib
-from threading import Thread
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
@@ -13,7 +12,7 @@ from Base.base_class import BaseClass
 from Parse.response import Response
 
 
-class Crawler(BaseClass, Thread):
+class Crawler(BaseClass):
 	def __init__ (self):
 		super().__init__()
 

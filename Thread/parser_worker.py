@@ -39,4 +39,4 @@ class ParserWorker(BaseWorker):
 				self.logger.info("Pushed %d urls", len(urls))
 
 		# Return
-		return self.mediator.keep_parser() or self._parent.crawl_worker.is_alive()
+		return self.mediator.keep_parser() or self.mediator.keep_crawler()
