@@ -13,7 +13,8 @@ class CrawlerWorker(BaseWorker):
 		# Crawl
 		if url is not None:
 			self.logger.debug("Got %d urls", len(url))
-			responses.append(Crawler().execute_request(url))
+			responses_tmp = Crawler().execute_request(url)
+			responses.append(responses_tmp)
 			self.logger.debug("Executed %s", url)
 
 			# Save

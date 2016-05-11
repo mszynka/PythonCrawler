@@ -17,4 +17,4 @@ class ContentParser(BaseParser):
 		pbody = content('.gridly-copy')
 		additional_url = content('.gridly-link')
 
-		return ParsedObject(header=pheader.text(), body=pbody.text(), url=additional_url)
+		return ParsedObject(header=pheader.text(), body=pbody.text(), url=additional_url.text())

@@ -33,14 +33,10 @@ class Worker(BaseClass, threading.Thread):
 		"""
 		Default overriden thread run method
 		"""
-		keep_worker = True
+		# keep_worker = True
 		self.mediator.update_progressbar()
-		self.crawl_worker.start()
-		self.parse_worker.start()
-		self.database_worker.start()
 
-		while keep_worker:
-			self.crawl_worker.join(3)  # TODO: Benchmark perfect time
-			self.parse_worker.join(3)
-			self.database_worker.join(3)
-			keep_worker = self.crawl_worker.is_alive() and self.parse_worker.is_alive() and self.database_worker.is_alive()
+		# while keep_worker:
+		self.crawl_worker.run()
+		self.parse_worker.run()
+		self.database_worker.run()
