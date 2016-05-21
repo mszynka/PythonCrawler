@@ -1,3 +1,6 @@
+from Benchmark.benchmark_status import BenchmarkStatus
+
+
 class datagrid:
 	def __init__ (self, iteration, round, time):
 		self.iteration = iteration
@@ -5,7 +8,7 @@ class datagrid:
 		self.time = time
 
 	def __repr__ (self):
-		return str("%i %.2f" % (self.iteration + 1, self.time))
+		return str("%i\t%.2f" % (self.iteration + 1, self.time))
 
 	@staticmethod
 	def avg_by_iteration (collection):
@@ -28,5 +31,11 @@ class datagrid:
 
 	@staticmethod
 	def print_collection (collection):
+		f = open('benchmark.log', 'a')
+		f.write("=============================================\n")
+		i, r = BenchmarkStatus.Instance().get()
+		f.write(str.format("Iterations: {0}, rounds: {1}\n", i + 1, r + 1))
 		for item in collection:
 			print(item)
+			f.write(str(item))
+			f.write("\n")

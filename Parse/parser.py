@@ -5,6 +5,8 @@
 """
 from bs4 import BeautifulSoup
 
+from Benchmark.benchmark_data import BenchmarkData
+from Benchmark.time_capsule import time_capsule
 from Parse.base import BaseParser
 
 # noinspection PyBroadException
@@ -25,6 +27,9 @@ class Parser(BaseParser):
 		:param response: urrlib.request.urlopen product
 		:returns: Model
 		"""
+		capsule = time_capsule()
+		capsule.start()
+
 		encoding = response.html.info().get_charset()
 		soup_string = BeautifulSoup(response.html.read(), "lxml", from_encoding=encoding)
 		decoded_response = Response(response.url, soup_string.decode())
@@ -35,6 +40,11 @@ class Parser(BaseParser):
 			links = self._link_p.parse(decoded_response)
 			model = self._content_p.parse(decoded_response)
 			self.logger.debug("Parsing successful")
+
+			capsule.end()
+			data = BenchmarkData.Instance()
+			data.appendd(type(self).__name__, self.parse.__name__, capsule.get_time())
+
 			return model, links
 		except:
 			self.logger.error("Parsing was unsuccessful")
