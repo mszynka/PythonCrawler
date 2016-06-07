@@ -9,6 +9,8 @@ from urllib.error import HTTPError
 from urllib.request import urlopen
 
 from Base.base_class import BaseClass
+from Benchmark.benchmark_data import BenchmarkData
+from Benchmark.time_capsule import time_capsule
 from Parse.response import Response
 
 
@@ -20,7 +22,6 @@ class Crawler(BaseClass):
 		# User-Agent hack for getting requests out of sites not supporting robots
 		request = urllib.request.Request(url, headers={ 'User-Agent': 'Wget/1.9.1' })
 		self.logger.debug("Received response")
-
 		return Response(url, urlopen(request))
 
 	def execute_request (self, url: str) -> Response:
@@ -32,6 +33,9 @@ class Crawler(BaseClass):
 		if url is None:
 			return False
 		response = None
+		capsule = time_capsule()
+		capsule.start()
+
 		try:
 			response = self._get_response(url)
 		except HTTPError as err:
@@ -39,4 +43,7 @@ class Crawler(BaseClass):
 			time.sleep(3)
 			response = self._get_response(url)
 		finally:
+			capsule.end()
+			data = BenchmarkData.Instance()
+			data.appendd(type(self).__name__, self.execute_request.__name__, capsule.get_time())
 			return response
