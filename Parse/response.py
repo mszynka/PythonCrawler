@@ -10,4 +10,5 @@ class Response(BaseClass):
 
 
 class Responses(BaseIterable):
-	pass
+	def clear (self):
+		self._objects.clear()

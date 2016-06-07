@@ -47,12 +47,16 @@ class Mediator(BaseClass):
 			if tmp_count < 1:
 				break
 
-		self._urls_get += count
-
-		urls = urls[0] if count == 1 else urls
-		return urls
+		if len(urls):
+			self._urls_get += count
+			urls = urls[0] if count == 1 else urls
+			return urls
+		return None
 
 	def push_urls (self, urls: list) -> None:
+		if self._urls_set >= 100:
+			return
+
 		for url in urls:
 			try:
 				self._urls[url]
@@ -141,14 +145,17 @@ class Mediator(BaseClass):
 
 	def keep_crawler (self) -> bool:
 		# return self._urls.unfinished_tasks > 0
-		return True  # For a while this may be working
+		if self._urls_get > 50:
+			return not self._urls_get >= self._urls_set
+		else:
+			return not self._urls_get > self._urls_set
 
 	def keep_parser (self) -> bool:
 		# return self._urls.qsize() > self._items_parsed
-		return True  # For a while this may be working
+		return self.keep_crawler()  # For a while this may be working
 
 	def keep_database (self) -> bool:
 		# return self.keep_crawler() and (self._model_queue.qsize() > 0)
-		return True  # For a while this may be working
+		return self.keep_crawler()  # For a while this may be working
 
 	# return not self._model_queue.empty()
