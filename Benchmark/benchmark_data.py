@@ -13,7 +13,7 @@ class BenchmarkData(BaseClass):
 
 	def appendd (self, moduleName, method, time):
 		status = BenchmarkStatus.Instance()
-		print(moduleName)
+		# print(moduleName)
 		try:
 			if os.environ["BENCHMARK"]:
 				if not self.data[moduleName]:
