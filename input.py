@@ -1,1 +1,1 @@
-links_list = ['http://konradkaczmarczyk.pl']
+links_list = ['http://spiewnikreligijny.pl']

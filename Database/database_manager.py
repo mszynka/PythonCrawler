@@ -17,7 +17,7 @@ class DatabaseManager(BaseClass):
 		Setting up Database Engine, paths, binding models and creating session
 		"""
 		super().__init__()
-		db_path = "sqlite:///Database/parsed.db"
+		db_path = "sqlite:///Database/data.sqlite"
 		self.engine = create_engine(db_path)
 		model.Base.metadata.create_all(self.engine)
 		self.session = sessionmaker(bind=self.engine)()

@@ -46,10 +46,9 @@ class Mediator(BaseClass):
 	def push_urls (self, urls: list) -> None:
 		try:
 			self._url_qlock.acquire()  # TODO: use await for better thread utilization
-			if not self._url_queue.empty():
-				for url in urls:
-					self._url_queue.put(url)
-					self._urls_set += 1
+			for url in urls:
+				self._url_queue.put(url)
+				self._urls_set += 1
 		finally:
 			self._url_qlock.release()
 
@@ -133,14 +132,15 @@ class Mediator(BaseClass):
 		return not (self.keep_crawler() and self.keep_parser() and self.keep_database())
 
 	def keep_crawler (self) -> bool:
-		return self.keep_parser()
-
-	# return not self._url_queue.empty()
+		# return self._url_queue.unfinished_tasks > 0
+		return True  # For a while this may be working
 
 	def keep_parser (self) -> bool:
-		return self._url_queue.qsize() > self._items_parsed
+		# return self._url_queue.qsize() > self._items_parsed
+		return True  # For a while this may be working
 
 	def keep_database (self) -> bool:
-		return self.keep_crawler() and (self._model_queue.qsize() > 0)
+		# return self.keep_crawler() and (self._model_queue.qsize() > 0)
+		return True  # For a while this may be working
 
 	# return not self._model_queue.empty()

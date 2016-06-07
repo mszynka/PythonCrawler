@@ -18,25 +18,29 @@ class ParserWorker(BaseWorker):
 		models = Models()
 		urls = list()
 
-		# Parse
-		if responses is not None:
-			self.logger.debug("Got %d responses", len(responses))
-			for response in responses:
-				if response is not None and isinstance(response, Response):
-					model, url = self.parser.parse(response)
-					if model is not None and isinstance(model, ParsedObject):
-						models.append(model)
-					if urls is not None:
-						urls.append(url)
-					self.logger.debug("Parsed %s", response.url)
+		try:
+			# Parse
+			if responses is not None:
+				self.logger.debug("Got %d responses", len(responses))
+				for response in responses:
+					if response is not None and isinstance(response, Response):
+						model, url = self.parser.parse(response)
+						if model is not None and isinstance(model, ParsedObject):
+							models.append(model)
+						if url is not None:
+							urls.extend(url)
+						self.logger.debug("Parsed %s", response.url)
 
+		except:
+			self.logger.error("Error ocurred in worker")
+		finally:
 			# Save
 			self.mediator.push_models(models)
-			self.mediator.push_urls(urls)
+			self.mediator.push_urls(list(set(urls)))
 			if len(models) > 0:
 				self.logger.info("Pushed %d models", len(models))
 			if len(urls) > 0:
 				self.logger.info("Pushed %d urls", len(urls))
 
-		# Return
-		return self.mediator.keep_parser() or self.mediator.keep_crawler()
+			# Return
+			return self.mediator.keep_parser() or self.mediator.keep_crawler()

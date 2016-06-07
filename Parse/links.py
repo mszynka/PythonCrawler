@@ -27,6 +27,7 @@ class LinkParser(BaseParser):
 	def _fix_links (self):
 		self._get_host_name()
 		self._prepend_links_with_hostname()
+		self._links = list(set(self._links))
 
 	def _get_host_name (self):
 		p_url = urlparse(self._response.url)
@@ -37,3 +38,6 @@ class LinkParser(BaseParser):
 			if self._links[iterator][0] == "/":
 				# noinspection PyUnusedLocal
 				self._links[iterator] = str.format("{0}{1}", self.hostname, self._links[iterator])
+			if self._links[iterator] == "#":
+				self._links.pop(iterator)
+				iterator -= 1

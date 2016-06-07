@@ -47,5 +47,5 @@ crashlytics-build.properties
 fabric.properties
 
 __pycache__
-*.db
+*.sqlite
 *.log

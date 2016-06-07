@@ -34,18 +34,20 @@ class Parser(BaseParser):
 		soup_string = BeautifulSoup(response.html.read(), "lxml", from_encoding=encoding)
 		decoded_response = Response(response.url, soup_string.decode())
 
+		links = list()
+		models = list()
+
 		self.logger.debug("Initialized parsing")
 		# noinspection PyBroadException
 		try:
 			links = self._link_p.parse(decoded_response)
-			model = self._content_p.parse(decoded_response)
+			models = list(self._content_p.parse(decoded_response))
 			self.logger.debug("Parsing successful")
 
 			capsule.end()
 			data = BenchmarkData.Instance()
 			data.appendd(type(self).__name__, self.parse.__name__, capsule.get_time())
-
-			return model, links
 		except:
 			self.logger.error("Parsing was unsuccessful")
-			return None, None
+		finally:
+			return models, links
