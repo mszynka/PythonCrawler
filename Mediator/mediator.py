@@ -19,7 +19,7 @@ class Mediator(BaseClass):
 		self._urls_set = input_size
 
 		self._url_qlock = threading.Lock()
-		self._url_queue = Queue()
+		self._urls = dict()
 
 		self._model_qlock = threading.Lock()
 		self._model_queue = Queue()
@@ -28,29 +28,37 @@ class Mediator(BaseClass):
 		self._response_queue = Queue()
 
 		for item in seed:
-			self._url_queue.put(item)
+			self._urls[item] = False
 
 	def get_url (self, count=1) -> list:
+		if len(self._urls) < 1:
+			return None
+
 		assert (count > 0)
-		urls = None
-		try:
-			self._url_qlock.acquire()  # TODO: use await for better thread utilization
-			if not self._url_queue.empty():
-				urls = self._url_queue.get()  # TODO: count  # TODO: get n{1-5, or benchmarks} urls (for await
-				#  statement)
-				self._urls_get += count
-		finally:
-			self._url_qlock.release()
+		urls = list()
+
+		tmp_count = count
+		for item in self._urls:
+			if not self._urls[item]:
+				self._urls[item] = True
+				tmp_count -= 1
+				urls.append(item)
+
+			if tmp_count < 1:
+				break
+
+		self._urls_get += count
+
+		urls = urls[0] if count == 1 else urls
 		return urls
 
 	def push_urls (self, urls: list) -> None:
-		try:
-			self._url_qlock.acquire()  # TODO: use await for better thread utilization
-			for url in urls:
-				self._url_queue.put(url)
+		for url in urls:
+			try:
+				self._urls[url]
+			except KeyError:
+				self._urls[url] = False
 				self._urls_set += 1
-		finally:
-			self._url_qlock.release()
 
 	def get_models (self) -> Models:
 		models = Models()
@@ -112,8 +120,8 @@ class Mediator(BaseClass):
 		"""
 		Updates progress bar when thread ended a task
 		"""
-		if self._url_queue.qsize() > 0:
-			count_progress = int((1 - (self._urls_get / self._url_queue.qsize())) * 100)
+		if len(self._urls) > 0:
+			count_progress = int((self._urls_get / self._urls_set) * 100)
 		else:
 			count_progress = 100
 		progress_bar = ""
@@ -132,11 +140,11 @@ class Mediator(BaseClass):
 		return not (self.keep_crawler() and self.keep_parser() and self.keep_database())
 
 	def keep_crawler (self) -> bool:
-		# return self._url_queue.unfinished_tasks > 0
+		# return self._urls.unfinished_tasks > 0
 		return True  # For a while this may be working
 
 	def keep_parser (self) -> bool:
-		# return self._url_queue.qsize() > self._items_parsed
+		# return self._urls.qsize() > self._items_parsed
 		return True  # For a while this may be working
 
 	def keep_database (self) -> bool:
