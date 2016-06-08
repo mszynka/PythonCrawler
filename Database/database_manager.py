@@ -6,7 +6,7 @@ from sqlalchemy.orm.exc import UnmappedInstanceError
 
 from Base.base_class import BaseClass
 from Database import model
-from Database.model import ParsedObject, Base
+from Database.model import Base
 from Database.models import Models
 
 
@@ -31,7 +31,6 @@ class DatabaseManager(BaseClass):
 		assert isinstance(data, Base)
 		try:
 			if data is not None:
-				assert isinstance(data, ParsedObject)
 				self.session.add(data)
 				self.session.commit()
 				self.logger.debug("Element %s added", data.header)

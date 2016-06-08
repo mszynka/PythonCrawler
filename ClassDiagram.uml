@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>Python</ID>
+  <OriginalElement>#/home/mateusz/Documents/Programowanie/Python/Crawler</OriginalElement>
+  <nodes>
+    <node x="765.0241545893718" y="198.93719806763286">Database.models.Models</node>
+    <node x="437.0" y="573.0">Thread.base_worker.BaseWorker</node>
+    <node x="347.4589371980676" y="145.62318840579712">Parse.Templates.TemplateManager.TemplateManager</node>
+    <node x="337.6859903381643" y="481.1014492753623">Parse.response.Response</node>
+    <node x="961.913043478261" y="237.56521739130434">_collections_abc.Iterable</node>
+    <node x="622.0338164251207" y="640.7729468599034">Thread.parser_worker.ParserWorker</node>
+    <node x="201.0" y="343.0">Parse.base.BaseParser</node>
+    <node x="573.7632850241546" y="512.2367149758454">Database.database_manager.DatabaseManager</node>
+    <node x="417.20289855072474" y="712.8164251207729">Thread.database_worker.DatabaseWorker</node>
+    <node x="137.09178743961354" y="276.02415458937196">Parse.parser.Parser</node>
+    <node x="34.888888888888914" y="405.4154589371981">Parse.content.ContentParser</node>
+    <node x="269.7681159420289" y="438.8502415458937">Parse.links.LinkParser</node>
+    <node x="325.7294685990338" y="290.82125603864733">Crawl.crawler.Crawler</node>
+    <node x="969.1159420289857" y="296.26570048309173">_collections_abc.Sized</node>
+    <node x="723.0434782608695" y="450.54106280193236">Parse.Templates.TemplateResolver.TemplateResolver</node>
+    <node x="236.6859903381643" y="658.1787439613527">Thread.crawler_worker.CrawlerWorker</node>
+    <node x="550.4830917874397" y="216.85507246376812">Mediator.mediator.Mediator</node>
+    <node x="426.0" y="332.0">Base.base_class.BaseClass</node>
+    <node x="182.58454106280192" y="217.21739130434784">Parse.Templates.TemplateParser.TemplateParser</node>
+    <node x="673.0" y="273.0">Base.base_iterable.BaseIterable</node>
+    <node x="690.0917874396137" y="339.2270531400966">Parse.response.Responses</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="Parse.response.Response" target="Base.base_class.BaseClass">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Mediator.mediator.Mediator" target="Base.base_class.BaseClass">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Base.base_iterable.BaseIterable" target="_collections_abc.Iterable">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Parse.content.ContentParser" target="Parse.base.BaseParser">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Parse.Templates.TemplateParser.TemplateParser" target="Base.base_class.BaseClass">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Parse.links.LinkParser" target="Parse.base.BaseParser">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Parse.Templates.TemplateManager.TemplateManager" target="Base.base_class.BaseClass">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Parse.Templates.TemplateResolver.TemplateResolver" target="Base.base_class.BaseClass">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Thread.base_worker.BaseWorker" target="Base.base_class.BaseClass">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Base.base_iterable.BaseIterable" target="_collections_abc.Sized">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Parse.base.BaseParser" target="Base.base_class.BaseClass">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Thread.parser_worker.ParserWorker" target="Thread.base_worker.BaseWorker">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Thread.crawler_worker.CrawlerWorker" target="Thread.base_worker.BaseWorker">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Parse.response.Responses" target="Base.base_iterable.BaseIterable">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Database.models.Models" target="Base.base_iterable.BaseIterable">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Parse.parser.Parser" target="Parse.base.BaseParser">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Base.base_iterable.BaseIterable" target="Base.base_class.BaseClass">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Database.database_manager.DatabaseManager" target="Base.base_class.BaseClass">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Crawl.crawler.Crawler" target="Base.base_class.BaseClass">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="Thread.database_worker.DatabaseWorker" target="Thread.base_worker.BaseWorker">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.6592356687898089" x="579.0483091787439" y="481.0" />
+  <SelectedNodes>
+    <node>Parse.response.Responses</node>
+  </SelectedNodes>
+  <Categories />
+</Diagram>
+

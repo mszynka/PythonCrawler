@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template name="Śpiewnik">
+    <site url="http://spiewnikreligijny.pl/">
+        <concept name="header">
+            <object name="title" query=""/>
+        </concept>
+        <concept name="body"/>
+        <concept name="footer"/>
+    </site>
+    <site url="http://spiewnikreligijny.pl/lista-tekstow/">
+        <concept name="tracklist">
+            <!--<object name="title"></object>-->
+        </concept>
+    </site>
+    <site url="http://spiewnikreligijny.pl/teksty/">
+        <concept name="Track">
+            <object name="title" query=".entry-title"/>
+            <object name="text" query=".entry-content pre:first-of-type"/>
+            <object name="grips" query=".entry-content pre:nth-of-type(2)"/>
+            <object name="visited" query=".entry-content pre:nth-of-type(3)"/>
+            <object name="added" query=".entry-content pre:nth-of-type(4)"/>
+        </concept>
+    </site>
+    <site url="http://spiewnikreligijny.pl/lista-wykonawcow/">
+        <concept name="artistlist">
+            <object name="name" query=".entry-content p a"/>
+        </concept>
+    </site>
+    <site url="http://spiewnikreligijny.pl/wykonawcy/">
+        <concept name="Artist">
+            <object name="name" query=".entry-title"/>
+            <object name="about" query=".entry-content p:first-of-type"/>
+            <object name="group" query=".entry-content p:nth-of-type(2)"/>
+            <object name="site" query=".entry-content p:nth-of-type(2) a"/>
+            <object name="tracklist" query=""/>
+        </concept>
+    </site>
+    <site url="http://spiewnikreligijny.pl/lista-plyt/">
+        <concept name="cdlist">
+            <object name="name" query=".recordDescList2"/>
+            <object name="image" query=".recordList img:first-of-type"/>
+        </concept>
+    </site>
+    <site url="http://spiewnikreligijny.pl/plyty/">
+        <concept name="Cd">
+            <object name="image" query=""/>
+            <object name="artist" query=""/>
+            <object name="tracklist" query=""/>
+        </concept>
+    </site>
+    <site url="http://spiewnikreligijny.pl/lista-koncertow/">
+        <concept name="concertlist">
+            <object name="name" query=""/>
+            <object name="date" query=""/>
+            <object name="city" query=""/>
+        </concept>
+    </site>
+    <site url="http://spiewnikreligijny.pl/koncerty/">
+        <concept name="Concert">
+            <object name="date" query=""/>
+            <object name="name" query=".entry-title"/>
+            <object name="place" query=".entry-content p:first-of-type b"/>
+            <object name="ticket" query=".entry-content p:nth-of-type(2) b"/>
+            <object name="site" query=".entry-content p:nth-of-type(3) b"/>
+            <object name="artists" query=".entry-content p:nth-of-type(4) b"/>
+        </concept>
+    </site>
+</template>

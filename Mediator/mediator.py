@@ -3,7 +3,6 @@ import threading
 from queue import Queue
 
 from Base.base_class import BaseClass
-from Database.model import ParsedObject
 from Database.models import Models
 from Parse.response import Response, Responses
 
@@ -72,17 +71,15 @@ class Mediator(BaseClass):
 				models.append(self._model_queue.get())
 		finally:
 			self._model_qlock.release()
-		return models
+			return models
 
 	def push_models (self, models: Models) -> None:
 		assert isinstance(models, Models)
 		try:
 			self._model_qlock.acquire()  # TODO: use await for better thread utilization
-			if not self._model_queue.empty():
-				for model in models:
-					if isinstance(model, ParsedObject):
-						self._model_queue.put(model)
-						self._items_parsed += 1
+			for model in models:
+				self._model_queue.put(model)
+				self._items_parsed += 1
 		finally:
 			self._model_qlock.release()
 
@@ -135,8 +132,8 @@ class Mediator(BaseClass):
 			else:
 				progress_bar += " "
 		sys.stdout.write("\r")
-		sys.stdout.write("%s %s%% Urls set: %d, Urls get: %d, Responses set: %d, Items parsed: %d" % (
-			progress_bar, str(count_progress), self._urls_set, self._urls_get, self._responses_set,
+		sys.stdout.write("%s %s%% Urls: %d, Responses: %d, Parsed: %d" % (
+			progress_bar, str(count_progress), self._urls_set, self._responses_set,
 			self._items_parsed))
 		sys.stdout.flush()
 

@@ -1,4 +1,3 @@
-from Database.model import ParsedObject
 from Database.models import Models
 from Mediator.mediator import Mediator
 from Parse.parser import Parser
@@ -25,7 +24,7 @@ class ParserWorker(BaseWorker):
 				for response in responses:
 					if response is not None and isinstance(response, Response):
 						model, url = self.parser.parse(response)
-						if model is not None and isinstance(model, ParsedObject):
+						if model is not None:
 							models.append(model)
 						if url is not None:
 							urls.extend(url)

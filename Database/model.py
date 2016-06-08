@@ -1,13 +1,21 @@
-from sqlalchemy import Column, Integer, Unicode
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
 
-class ParsedObject(Base):
-	__tablename__ = 'ptext'
+class Concepts(Base):
+	__tablename__ = 'Concepts'
 
-	id = Column(Integer, primary_key=True)
-	header = Column(Unicode)
-	body = Column(Unicode)
-	url = Column(Unicode)
+	Id = Column(Integer, primary_key=True)
+	ConceptId = Column(String)
+	ConceptName = Column(String)
+
+
+class CData(Base):
+	__tablename__ = 'CData'
+
+	Id = Column(Integer, primary_key=True)
+	ConceptId = Column(String)
+	Key = Column(String)
+	Value = Column(String)

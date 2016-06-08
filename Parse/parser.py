@@ -41,7 +41,7 @@ class Parser(BaseParser):
 		# noinspection PyBroadException
 		try:
 			links = self._link_p.parse(decoded_response)
-			models = list(self._content_p.parse(decoded_response))
+			models = self._content_p.parse(decoded_response)
 			self.logger.debug("Parsing successful")
 
 			capsule.end()
