@@ -5,7 +5,7 @@ from Base.base_class import BaseClass
 
 # Fix: Found bug. Remove base iterable and change to distinct objects
 class BaseIterable(BaseClass, metaclass=ABCMeta):
-	def __init__ (self, objects=list()):
+	def __init__ (self, objects=None):
 		super().__init__()
 		if objects is None:
 			self._objects = list()
