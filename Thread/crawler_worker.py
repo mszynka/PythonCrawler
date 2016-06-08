@@ -9,7 +9,6 @@ class CrawlerWorker(BaseWorker):
 		self.mediator.update_progressbar()
 		url = self.mediator.get_url()
 		responses = Responses()
-		responses.clear()
 
 		# Crawl
 		if url is not None:

@@ -13,9 +13,10 @@ class TemplateManager(BaseClass):
 		self.TemplateParser = TemplateParser()
 
 	def parse (self, response):
-		template = self.TResolver.resolve(response.url)
-		if template:
+		try:
+			template = self.TResolver.resolve(response.url)
 			models = self.TemplateParser.parse(response.html, template)
-
 			return models
-		return None
+		except ResourceWarning as w:
+			self.logger.warning(w)
+			return None

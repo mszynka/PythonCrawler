@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template name="Śpiewnik">
-    <site url="http://spiewnikreligijny.pl/">
+    <site url="http://spiewnikreligijny.pl">
         <concept name="header">
             <object name="title" query=""/>
         </concept>

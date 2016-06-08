@@ -25,7 +25,7 @@ class ParserWorker(BaseWorker):
 					if response is not None and isinstance(response, Response):
 						model, url = self.parser.parse(response)
 						if model is not None:
-							models.append(model)
+							models.extend(model)
 						if url is not None:
 							urls.extend(url)
 						self.logger.debug("Parsed %s", response.url)

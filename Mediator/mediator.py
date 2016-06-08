@@ -94,7 +94,7 @@ class Mediator(BaseClass):
 			# statement)
 		finally:
 			self._response_qlock.release()
-		return responses
+			return responses
 
 	# TODO: Assertion tests with usages, types and magic
 	def push_response (self, response: Response) -> None:

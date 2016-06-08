@@ -25,3 +25,5 @@ class TemplateResolver(BaseClass):
 		for a in sorted(self.UrlDict, reverse=True):
 			if re.match(r'^' + a + '(\D*\d*\D*\d*)*$', url):
 				return self.UrlDict[a]
+
+		raise ResourceWarning()
