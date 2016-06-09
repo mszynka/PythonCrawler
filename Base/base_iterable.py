@@ -3,7 +3,6 @@ from abc import ABCMeta
 from Base.base_class import BaseClass
 
 
-# Fix: Found bug. Remove base iterable and change to distinct objects
 class BaseIterable(BaseClass, metaclass=ABCMeta):
 	def __init__ (self, objects=None):
 		super().__init__()
