@@ -2,8 +2,6 @@ from Base.base_class import BaseClass
 from Parse.Templates.TemplateParser import TemplateParser
 from Parse.Templates.TemplateResolver import TemplateResolver
 
-__author__ = 'robin'
-
 
 class TemplateManager(BaseClass):
 	def __init__ (self):

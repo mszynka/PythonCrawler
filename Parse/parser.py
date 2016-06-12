@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 
 from Benchmark.benchmark_data import BenchmarkData
 from Benchmark.time_capsule import time_capsule
+from Database.models import Models
 from Parse.base import BaseParser
 
 # noinspection PyBroadException
@@ -35,7 +36,7 @@ class Parser(BaseParser):
 		decoded_response = Response(response.url, soup_string.decode())
 
 		links = list()
-		models = list()
+		models = Models()
 
 		self.logger.debug("Initialized parsing")
 		# noinspection PyBroadException

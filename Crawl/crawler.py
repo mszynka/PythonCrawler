@@ -15,9 +15,6 @@ from Parse.response import Response
 
 
 class Crawler(BaseClass):
-	def __init__ (self):
-		super().__init__()
-
 	def _get_response (self, url) -> Response:
 		# User-Agent hack for getting requests out of sites not supporting robots
 		request = urllib.request.Request(url, headers={ 'User-Agent': 'Wget/1.9.1' })

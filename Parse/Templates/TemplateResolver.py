@@ -3,8 +3,6 @@ from xml.dom import minidom
 
 from Base.base_class import BaseClass
 
-__author__ = 'robin'
-
 
 class TemplateResolver(BaseClass):
 	def __init__ (self, xml):

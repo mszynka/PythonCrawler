@@ -4,14 +4,13 @@ from pyquery import PyQuery
 
 from Base.base_class import BaseClass
 from Database.model import Concepts, CData
-
-__author__ = 'robin'
+from Database.models import Models
 
 
 class TemplateParser(BaseClass):
 	def parse (self, html, template):
 		pq_parser = PyQuery(html)
-		lista = list()
+		lista = Models()
 
 		for con in template:
 			ConName = [x for x in con][0]
