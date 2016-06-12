@@ -40,7 +40,6 @@ class WorkerManager(BaseClass):
 		"""
 		Waits for threads to terminate
 		"""
-		# TODO: use await for better thread utilization
 		for thread in self._threads:
 			thread.join()
 		self.logger.debug("Joined all %d threads", len(self._threads))
