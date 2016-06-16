@@ -20,6 +20,11 @@ class BaseIterable(BaseClass, metaclass=ABCMeta):
 		if obj is not None and isinstance(obj, list):
 			self._objects.extend(obj)
 
+	def first (self):
+		if len(self._objects):
+			return self._objects[0]
+		return None
+
 	def __len__ (self) -> int:
 		return len(self._objects)
 

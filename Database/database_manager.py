@@ -1,7 +1,7 @@
 from queue import Queue
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, class_mapper
 from sqlalchemy.orm.exc import UnmappedInstanceError
 
 from Base.base_class import BaseClass
@@ -11,13 +11,12 @@ from Database.models import Models
 
 
 class DatabaseManager(BaseClass):
-	def __init__ (self):
+	def __init__ (self, db_path="sqlite:///Database/data.sqlite"):
 		"""
 		Default constructor
 		Setting up Database Engine, paths, binding models and creating session
 		"""
 		super().__init__()
-		db_path = "sqlite:///Database/data.sqlite"
 		self.engine = create_engine(db_path)
 		model.Base.metadata.create_all(self.engine)
 		self.session = sessionmaker(bind=self.engine)()
@@ -70,8 +69,9 @@ class DatabaseManager(BaseClass):
 			if element is not None:
 				self.add(element)
 
-	def list (self):
+	def list (self, model):
 		"""
 		Prints out whole database as list
 		"""
-		raise NotImplementedError
+		assert (model is not None)
+		return self.session.query(class_mapper(model.__class__)).all()

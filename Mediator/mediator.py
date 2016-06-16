@@ -66,7 +66,7 @@ class Mediator(BaseClass):
 	def get_models (self) -> Models:
 		models = Models()
 		try:
-			self._model_qlock.acquire()  # TODO: use await for better thread utilization
+			self._model_qlock.acquire()
 			while not self._model_queue.empty():
 				models.append(self._model_queue.get())
 		finally:
@@ -76,7 +76,7 @@ class Mediator(BaseClass):
 	def push_models (self, models: Models) -> None:
 		assert isinstance(models, Models)
 		try:
-			self._model_qlock.acquire()  # TODO: use await for better thread utilization
+			self._model_qlock.acquire()
 			for model in models:
 				self._model_queue.put(model)
 				self._items_parsed += 1
@@ -87,20 +87,17 @@ class Mediator(BaseClass):
 		assert (count > 0)
 		responses = Responses()
 		try:
-			self._response_qlock.acquire()  # TODO: use await for better thread utilization
+			self._response_qlock.acquire()
 			if not self._response_queue.empty():
-				responses.append(
-					self._response_queue.get())  # TODO: count  # TODO: get n{1-5, or benchmarks} urls (for await
-			# statement)
+				responses.append(self._response_queue.get())
 		finally:
 			self._response_qlock.release()
 			return responses
 
-	# TODO: Assertion tests with usages, types and magic
 	def push_response (self, response: Response) -> None:
 		if isinstance(response, Response) and response is not None:
 			try:
-				self._response_qlock.acquire()  # TODO: use await for better thread utilization
+				self._response_qlock.acquire()
 				self._response_queue.put(response)
 				self._responses_set += 1
 			finally:
@@ -109,7 +106,7 @@ class Mediator(BaseClass):
 	def push_responses (self, responses: Responses) -> None:
 		if isinstance(responses, Responses) and responses is not None:
 			try:
-				self._response_qlock.acquire()  # TODO: use await for better thread utilization
+				self._response_qlock.acquire()
 				for response in responses:
 					if response is not None:
 						self._response_queue.put(response)
